@@ -1,25 +1,21 @@
 package com.example.blogengine.model;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "tags")
+@NoArgsConstructor
 public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter
     @NonNull
     private int id;
 
-    @Getter
-    @Setter
     @NonNull
     private String name;
 

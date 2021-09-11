@@ -1,36 +1,31 @@
 package com.example.blogengine.model;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 
+@Data
 @Entity
 @Table(name = "captcha_codes")
+@NoArgsConstructor
 public class CaptchaCodes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter
     @NonNull
     private int id;
 
-    @Getter
-    @Setter
     @NonNull
     private Date time;
 
-    @Getter
-    @Setter
     @NonNull
     private String code;
 
     @Column(name = "secret_code")
-    @Getter
-    @Setter
     @NonNull
     private String secretCode;
+
 }
