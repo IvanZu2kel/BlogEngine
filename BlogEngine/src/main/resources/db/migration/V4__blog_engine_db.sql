@@ -14,7 +14,7 @@ insert into posts(is_active, moderation_status, moderator_id, user_id, `time`, t
 values (true, 'NEW', 1, 1, now(), 'title 1', 'post text 1', 222)
      , (true, 'NEW', 1, 1, '2021-09-01 12:00:00', 'title 2', 'some text', 323)
      , (true, 'NEW', 2, 2, '2021-09-01 12:00:00', 'title 3', 'some text', 231)
-     , ( true, 'ACCEPTED', 1, 2, '2020-08-01 00:00:00', 'title 4', 'some text', 123)
+     , (true, 'ACCEPTED', 1, 2, '2020-08-01 00:00:00', 'title 4', 'some text', 123)
      , (true, 'NEW', 1, 3, now(), 'title 5', 'some text', 4123)
      , (true, 'NEW', 1, 3, now(), 'title 6', 'some text', 1233)
      , (true, 'DECLINED', 1, 3, now(), 'title 7', 'some text', 3331)
@@ -24,7 +24,7 @@ values (true, 'NEW', 1, 1, now(), 'title 1', 'post text 1', 222)
      , (true, 'NEW', 1, 1, now(), 'title 11', 'some text', -1)
      , (true, 'ACCEPTED', 1, 1, now(), 'title 12', 'some text', 1110)
      , (true, 'ACCEPTED', 1, 1, now(), 'title 13', 'some text', 3213)
-     , (false , 'DECLINED', 1, 1, now(), 'title 14', 'some text', 22)
+     , (false, 'DECLINED', 1, 1, now(), 'title 14', 'some text', 22)
 ;
 
 insert into tag2post(post_id, tag_id)
