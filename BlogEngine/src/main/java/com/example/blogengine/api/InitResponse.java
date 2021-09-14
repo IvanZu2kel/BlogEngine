@@ -1,4 +1,4 @@
-package com.example.blogengine.dto;
+package com.example.blogengine.api;
 
 
 import lombok.Data;
@@ -20,10 +20,12 @@ public class InitResponse {
 
         @Value("${blog.email}")
         private String email;
+
+        @Value("${blog.copyright}")
         private String copyright;
+
+        @Value("${blog.copyrightFrom}")
         private String copyrightFrom;
-
-
 }
 //{
 //        "title": "DevPub",

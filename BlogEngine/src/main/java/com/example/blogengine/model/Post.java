@@ -1,7 +1,9 @@
 package com.example.blogengine.model;
 
-import lombok.*;
-import org.apache.coyote.http11.filters.SavedRequestInputFilter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.Date;

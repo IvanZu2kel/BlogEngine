@@ -14,7 +14,7 @@
     <name>BlogEngine</name>
     <description>BlogEngine</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>16</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -29,15 +29,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
@@ -49,6 +40,11 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
