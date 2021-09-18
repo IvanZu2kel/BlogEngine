@@ -21,19 +21,18 @@ public class PostComment {
     @JoinColumn(name = "parent_id")
     private PostComment parent;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    @NonNull
+    @ManyToOne(optional=false, cascade=CascadeType.ALL)
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @NonNull
+    @ManyToOne(optional=false, cascade=CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @NonNull
     private Date time;
 
+    @Column(columnDefinition = "text")
     @NonNull
     private String text;
 }

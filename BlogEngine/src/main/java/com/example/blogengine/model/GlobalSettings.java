@@ -18,11 +18,14 @@ public class GlobalSettings {
     private int id;
 
     @NonNull
+    @Column(columnDefinition = "varchar(255)")
     private String code;
 
     @NonNull
+    @Column(columnDefinition = "varchar(255)")
     private String name;
 
     @NonNull
+    @Column(columnDefinition = "varchar(255)")
     private String value;
 }

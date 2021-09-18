@@ -19,6 +19,7 @@ public class Tag {
     private int id;
 
     @NonNull
+    @Column(columnDefinition = "varchar(255)")
     private String name;
 
     @OneToMany(

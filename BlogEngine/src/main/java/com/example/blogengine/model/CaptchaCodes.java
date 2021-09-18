@@ -22,9 +22,10 @@ public class CaptchaCodes {
     private Date time;
 
     @NonNull
+    @Column(columnDefinition = "tinytext")
     private String code;
 
-    @Column(name = "secret_code")
+    @Column(name = "secret_code", columnDefinition = "tinytext")
     @NonNull
     private String secretCode;
 

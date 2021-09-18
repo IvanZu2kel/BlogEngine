@@ -16,13 +16,11 @@ public class Tag2Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable=false, referencedColumnName = "id")
     private Post post;
 
-    @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id")
+    @JoinColumn(name = "tag_id", nullable=false, referencedColumnName = "id")
     private Tag tag;
 }
