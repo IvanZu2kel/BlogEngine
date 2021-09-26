@@ -28,7 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "p.time", nativeQuery = true)
     Page<Post> findAllPostsByTime(Pageable pageable);
 
-    @Query(value = "select *  from posts where is_active = 1 and moderation_status = 'ACCEPTED' and p.`time` < NOW() ORDER BY " +
+    @Query(value = "select *  from posts p where is_active = 1 and moderation_status = 'ACCEPTED' and p.`time` < NOW() ORDER BY " +
             "time desc", nativeQuery = true)
     Page<Post> findAllPostsByTimeDesc(Pageable pageable);
 

@@ -12,7 +12,7 @@ import java.util.List;
 public interface TagRepository extends JpaRepository<Tag, Integer> {
 
     @Query(value = "select t.name as name, count(t.id) as count from tags t join tag2post tp on tp.tag_id = t.id " +
-            "join posts p on p.id = tp.posts_id where p.is_active = 1 and p.moderation_status = 'ACCEPTED' and " +
-            "p.`time` < NOW() group by tp.tags_id order by count desc", nativeQuery = true)
+            "join posts p on p.id = tp.post_id where p.is_active = 1 and p.moderation_status = 'ACCEPTED' and " +
+            "p.`time` < NOW() group by tp.tag_id order by count desc", nativeQuery = true)
     List<TagResponseAnswerQuery> getRecentTags();
 }

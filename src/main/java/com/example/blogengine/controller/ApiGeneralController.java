@@ -36,7 +36,7 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/api/tag")
-    private TagsResponse getTags(@RequestParam String query){
+    private TagsResponse getTags(@RequestParam(required = false, defaultValue = "") String query){
         return tagService.getTags(query);
     }
 }
