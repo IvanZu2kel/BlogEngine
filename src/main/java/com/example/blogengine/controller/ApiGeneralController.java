@@ -31,8 +31,8 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/api/settings")
-    private ResponseEntity<SettingsResponse> settings() {
-        return new ResponseEntity<>(settingsService.getGlobalSettings(), HttpStatus.OK);
+    private SettingsResponse settings() {
+        return settingsService.getGlobalSettings();
     }
 
     @GetMapping("/api/tag")

@@ -33,10 +33,13 @@ public class PostServiceImpl implements PostService {
         switch (mode) {
             case "popular":
                 postPage = postRepository.findAllPostsByCommentsDesc(pageable);
+                break;
             case "best":
                 postPage = postRepository.findAllPostsByVotesDesc(pageable);
+                break;
             case "early":
                 postPage = postRepository.findAllPostsByTime(pageable);
+                break;
             default:
                 postPage = postRepository.findAllPostsByTimeDesc(pageable);
                 break;

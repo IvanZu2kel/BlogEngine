@@ -21,7 +21,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Page<Post> findAllPostsByCommentsDesc(Pageable pageable);
 
     @Query(value = "select * from posts p where p.is_active = 1 and p.moderation_status = 'ACCEPTED' and p.`time` < NOW() ORDER BY " +
-            "select sum(value) from post_votes c where c.post_id = p.id) desc", nativeQuery = true)
+            "(select sum(value) from post_votes c where c.post_id = p.id) desc", nativeQuery = true)
     Page<Post> findAllPostsByVotesDesc(Pageable pageable);
 
     @Query(value = "select * from posts p where p.is_active = 1 and p.moderation_status = 'ACCEPTED' and p.`time` < NOW() ORDER BY " +
