@@ -3,10 +3,9 @@ package com.example.blogengine.controller;
 import com.example.blogengine.api.response.PostsResponse;
 import com.example.blogengine.service.PostService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/post")
@@ -31,4 +30,24 @@ public class ApiPostController {
                                              @RequestParam(required = false, defaultValue = " ") String query) {
         return postService.getPostsSearch(offset, limit, query);
     }
+
+    @GetMapping("/byDate")
+    public ResponseEntity<?> getPostsByDate(@RequestParam(required = false, defaultValue = "0") int offset,
+                                           @RequestParam(required = false, defaultValue = "10") int limit,
+                                           @RequestParam(required = false, defaultValue = "") String date) {
+        return postService.getPostsByDate(offset, limit, date);
+    }
+
+    @GetMapping("/byTag")
+    public ResponseEntity<?> getPostsByTag(@RequestParam(required = false, defaultValue = "0") int offset,
+                                           @RequestParam(required = false, defaultValue = "10") int limit,
+                                           @RequestParam(required = false, defaultValue = "") String tag) {
+        return postService.getPostsByTag(offset, limit, tag);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPostsById(@PathVariable int id, Principal principal) {
+        return postService.getPostsById(id, principal);
+    }
+
 }

@@ -15,4 +15,6 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
             "join posts p on p.id = tp.post_id where p.is_active = 1 and p.moderation_status = 'ACCEPTED' and " +
             "p.`time` < NOW() group by tp.tag_id order by count desc", nativeQuery = true)
     List<TagResponseAnswerQuery> getRecentTags();
+
+    List<String> findTagsById(int id);
 }

@@ -2,7 +2,6 @@ package com.example.blogengine.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import javax.persistence.*;
 
@@ -17,10 +16,10 @@ public class Tag2Post {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable=false, referencedColumnName = "id")
+    @JoinColumn(name = "post_id", nullable = false, referencedColumnName = "id")
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id", nullable=false, referencedColumnName = "id")
+    @JoinColumn(name = "tag_id", nullable = false, referencedColumnName = "id")
     private Tag tag;
 }

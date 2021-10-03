@@ -51,7 +51,7 @@ public class Post {
 
     @Column(name = "view_count", columnDefinition = "int")
     @NonNull
-    private String viewCount;
+    private int viewCount;
 
     @OneToMany(mappedBy="post")
     private List<Tag2Post> tags;

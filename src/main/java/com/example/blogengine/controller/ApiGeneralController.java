@@ -44,7 +44,7 @@ public class ApiGeneralController {
         return tagService.getTags(query);
     }
 
-    @GetMapping("/calender")
+    @GetMapping("/api/calendar")
     public CalenderResponse getCalendar(
             @RequestParam(required = false, defaultValue = "none") String year) {
         return calendarService.getCalendar(year  );
