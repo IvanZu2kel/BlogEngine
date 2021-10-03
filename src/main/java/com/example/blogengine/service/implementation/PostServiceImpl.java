@@ -8,6 +8,8 @@ import com.example.blogengine.service.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,4 +61,12 @@ public class PostServiceImpl implements PostService {
         return postsResponse;
     }
 
+    @Override
+    public ResponseEntity<?> getPostsSearch(int offset, int limit, String query) {
+        Pageable pageable = PageRequest.of(offset/limit, limit);
+        Page<Post> pageOfTags = postRepository.findAllPostsBySearch(query, pageable);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(createPostResponse(pageOfTags, (int) pageOfTags.getTotalElements()));
+    }
 }

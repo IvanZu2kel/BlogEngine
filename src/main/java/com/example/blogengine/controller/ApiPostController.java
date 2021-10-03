@@ -24,4 +24,11 @@ public class ApiPostController {
                                                   @RequestParam() String mode) {
         return ResponseEntity.ok(postService.getPosts(offset,limit,mode));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> getPostsByQuery(@RequestParam(required = false, defaultValue = "0") int offset,
+                                             @RequestParam(required = false, defaultValue = "10") int limit,
+                                             @RequestParam(required = false, defaultValue = " ") String query) {
+        return postService.getPostsSearch(offset, limit, query);
+    }
 }
