@@ -53,13 +53,13 @@ public class Post {
     @NonNull
     private int viewCount;
 
-    @OneToMany(mappedBy="post")
+    @OneToMany(mappedBy = "post")
     private List<Tag2Post> tags;
 
-    @OneToMany(mappedBy="post")
+    @OneToMany(mappedBy = "post")
     private List<PostVotes> like;
 
-    @OneToMany(mappedBy="post")
+    @OneToMany(mappedBy = "post")
     private List<PostComment> comments;
 
 }

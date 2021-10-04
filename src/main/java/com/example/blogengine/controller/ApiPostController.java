@@ -18,10 +18,10 @@ public class ApiPostController {
     }
 
     @GetMapping("")
-    public ResponseEntity<PostsResponse> getPosts(@RequestParam(defaultValue = "0") int offset,
+    public ResponseEntity<?> getPosts(@RequestParam(defaultValue = "0") int offset,
                                                   @RequestParam(defaultValue = "10") int limit,
                                                   @RequestParam() String mode) {
-        return ResponseEntity.ok(postService.getPosts(offset,limit,mode));
+        return ResponseEntity.ok(postService.getPosts(offset, limit, mode));
     }
 
     @GetMapping("/search")
@@ -33,8 +33,8 @@ public class ApiPostController {
 
     @GetMapping("/byDate")
     public ResponseEntity<?> getPostsByDate(@RequestParam(required = false, defaultValue = "0") int offset,
-                                           @RequestParam(required = false, defaultValue = "10") int limit,
-                                           @RequestParam(required = false, defaultValue = "") String date) {
+                                            @RequestParam(required = false, defaultValue = "10") int limit,
+                                            @RequestParam(required = false, defaultValue = "") String date) {
         return postService.getPostsByDate(offset, limit, date);
     }
 
