@@ -1,13 +1,14 @@
 package com.example.blogengine.controller;
 
+import com.example.blogengine.api.request.UserRequest;
+import com.example.blogengine.api.response.RegisterResponse;
 import com.example.blogengine.service.CaptchaService;
 import com.example.blogengine.service.CheckService;
+import com.example.blogengine.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -19,11 +20,13 @@ public class ApiAuthController {
 
     private final CheckService checkService;
     private final CaptchaService captchaService;
+    private final RegisterService registerService;
 
     @Autowired
-    public ApiAuthController(CheckService checkService, CaptchaService captchaService) {
+    public ApiAuthController(CheckService checkService, CaptchaService captchaService, RegisterService registerService) {
         this.checkService = checkService;
         this.captchaService = captchaService;
+        this.registerService = registerService;
     }
 
     @GetMapping("/check")
@@ -34,5 +37,10 @@ public class ApiAuthController {
     @GetMapping("/captcha")
     public ResponseEntity<?> getCaptcha() throws IOException {
         return new ResponseEntity<>(captchaService.getCaptcha(), HttpStatus.OK);
+    }
+
+    @PostMapping("/register")
+    public RegisterResponse postRegister(@RequestBody UserRequest userRequest) {
+        return registerService.postRegister(userRequest);
     }
 }

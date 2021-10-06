@@ -17,5 +17,9 @@ public interface CaptchaRepository extends JpaRepository<CaptchaCodes, Integer> 
             nativeQuery = true)
     void insertCaptcha(@Param("code") String code, @Param("secret_code") String secret_code, @Param("time") Date time);
 
+    @Query(
+            value = "SELECT c.code FROM captcha_codes c WHERE c.secret_code = :secret_captcha",
+            nativeQuery = true)
+    String checkCaptcha(@Param("secret_captcha") String secret_captcha);
 
 }
