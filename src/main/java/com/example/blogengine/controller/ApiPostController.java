@@ -1,6 +1,5 @@
 package com.example.blogengine.controller;
 
-import com.example.blogengine.api.response.PostsResponse;
 import com.example.blogengine.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,7 @@ public class ApiPostController {
     @GetMapping("")
     public ResponseEntity<?> getPosts(@RequestParam(defaultValue = "0") int offset,
                                                   @RequestParam(defaultValue = "10") int limit,
-                                                  @RequestParam() String mode) {
+                                                  @RequestParam(defaultValue = "") String mode) {
         return ResponseEntity.ok(postService.getPosts(offset, limit, mode));
     }
 
