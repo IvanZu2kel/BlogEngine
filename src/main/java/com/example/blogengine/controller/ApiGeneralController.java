@@ -30,7 +30,7 @@ public class ApiGeneralController {
 
 
     @GetMapping("/api/init")
-    private InitResponse init(InitResponse initResponse){
+    private InitResponse init(){
         return initResponse;
     }
 
