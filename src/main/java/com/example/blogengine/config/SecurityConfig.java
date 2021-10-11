@@ -1,5 +1,6 @@
 package com.example.blogengine.config;
 
+import com.example.blogengine.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,8 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/api/init").permitAll()
-                .antMatchers("/api/post").hasAnyRole("USER")
-                .antMatchers("/api/post/search*").hasAnyRole("MODERATOR")
+                .antMatchers("/api/post").hasAnyRole(Role.USER.toString(), Role.MODERATOR.toString())
+                .antMatchers("/api/post/search*").hasAnyRole(Role.MODERATOR.toString())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -38,12 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 User.builder()
                         .username("user")
                         .password(passwordEncoder().encode("user"))
-                        .roles("USER")
+                        .roles(Role.USER.toString())
                         .build(),
                 User.builder()
                         .username("moderator")
                         .password(passwordEncoder().encode("moderator"))
-                        .roles("MODERATOR")
+                        .roles(Role.MODERATOR.toString())
                         .build());
     }
 
