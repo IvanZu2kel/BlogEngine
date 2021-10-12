@@ -1,8 +1,10 @@
 package com.example.blogengine.config;
 
+import com.example.blogengine.model.Permission;
 import com.example.blogengine.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
-@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -23,8 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/api/init").permitAll()
-                .antMatchers("/api/post").hasAnyRole(Role.USER.toString(), Role.MODERATOR.toString())
-                .antMatchers("/api/post/search*").hasAnyRole(Role.MODERATOR.toString())
+//                .antMatchers("/api/post").hasAuthority(Permission.USER.getPermission())
+//                .antMatchers("/api/post/search*").hasAuthority(Permission.MODERATE.getPermission())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -39,12 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 User.builder()
                         .username("user")
                         .password(passwordEncoder().encode("user"))
-                        .roles(Role.USER.toString())
+                        .authorities(Role.USER.getAuthorities())
                         .build(),
                 User.builder()
                         .username("moderator")
                         .password(passwordEncoder().encode("moderator"))
-                        .roles(Role.MODERATOR.toString())
+                        .authorities(Role.MODERATOR.getAuthorities())
                         .build());
     }
 

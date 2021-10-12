@@ -2,12 +2,14 @@ package com.example.blogengine.controller;
 
 import com.example.blogengine.service.PostService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/post")
+@PreAuthorize("hasAuthority('user:write')")
 public class ApiPostController {
 
     private final PostService postService;
