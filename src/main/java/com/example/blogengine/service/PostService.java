@@ -15,4 +15,6 @@ public interface PostService {
     ResponseEntity<?> getPostsByTag(int offset, int limit, String tag);
 
     ResponseEntity<?> getPostsById(int id, Principal principal);
+
+    ResponseEntity<?> getPostsMy(int offset, int limit, String status, Principal principal);
 }

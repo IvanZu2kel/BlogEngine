@@ -2,12 +2,14 @@ package com.example.blogengine.controller;
 
 import com.example.blogengine.service.PostService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/post")
+@PreAuthorize("hasAuthority('user:write')")
 public class ApiPostController {
 
     private final PostService postService;
@@ -18,8 +20,8 @@ public class ApiPostController {
 
     @GetMapping("")
     public ResponseEntity<?> getPosts(@RequestParam(defaultValue = "0") int offset,
-                                                  @RequestParam(defaultValue = "10") int limit,
-                                                  @RequestParam(defaultValue = "") String mode) {
+                                      @RequestParam(defaultValue = "10") int limit,
+                                      @RequestParam(defaultValue = "") String mode) {
         return ResponseEntity.ok(postService.getPosts(offset, limit, mode));
     }
 
@@ -49,4 +51,12 @@ public class ApiPostController {
         return postService.getPostsById(id, principal);
     }
 
+    @GetMapping("/my")
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<?> getPostsMy(@RequestParam(required = false, defaultValue = "0") int offset,
+                                        @RequestParam(required = false, defaultValue = "10") int limit,
+                                        @RequestParam(required = false, defaultValue = "") String status,
+                                        Principal principal) {
+        return ResponseEntity.ok(postService.getPostsMy(offset, limit, status, principal));
+    }
 }

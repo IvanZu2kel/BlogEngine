@@ -7,7 +7,6 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class LoginResponse {
-
     private boolean result;
     @JsonProperty("user")
     private UserLoginResponse userLoginResponse;
