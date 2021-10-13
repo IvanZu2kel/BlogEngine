@@ -20,8 +20,8 @@ public class ApiPostController {
 
     @GetMapping("")
     public ResponseEntity<?> getPosts(@RequestParam(defaultValue = "0") int offset,
-                                                  @RequestParam(defaultValue = "10") int limit,
-                                                  @RequestParam(defaultValue = "") String mode) {
+                                      @RequestParam(defaultValue = "10") int limit,
+                                      @RequestParam(defaultValue = "") String mode) {
         return ResponseEntity.ok(postService.getPosts(offset, limit, mode));
     }
 
@@ -51,4 +51,12 @@ public class ApiPostController {
         return postService.getPostsById(id, principal);
     }
 
+    @GetMapping("/my")
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<?> getPostsMy(@RequestParam(required = false, defaultValue = "0") int offset,
+                                        @RequestParam(required = false, defaultValue = "10") int limit,
+                                        @RequestParam(required = false, defaultValue = "") String status,
+                                        Principal principal) {
+        return ResponseEntity.ok(postService.getPostsMy(offset, limit, status, principal));
+    }
 }

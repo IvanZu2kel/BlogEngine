@@ -46,7 +46,7 @@ public class User
     @Column(columnDefinition = "text COMMENT 'ссылка на фотографию'")
     private String photo;
 
-    private Role getRole() {
+    public Role getRole() {
         return isModerator == 1 ? Role.MODERATOR : Role.USER;
     }
 

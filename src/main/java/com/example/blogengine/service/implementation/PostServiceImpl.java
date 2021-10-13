@@ -43,11 +43,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostsResponse getPosts(int offset, int limit, String mode) {
-
         Pageable pageable = PageRequest.of(offset / limit, limit);
-
         Page<Post> postPage;
-
         switch (mode) {
             case "popular":
                 postPage = postRepository.findAllPostsByCommentsDesc(pageable);
@@ -62,7 +59,6 @@ public class PostServiceImpl implements PostService {
                 postPage = postRepository.findAllPostsByTimeDesc(pageable);
                 break;
         }
-
         return createPostResponse(postPage, postRepository.findAllPosts().size());
     }
 
@@ -70,7 +66,6 @@ public class PostServiceImpl implements PostService {
     public ResponseEntity<?> getPostsSearch(int offset, int limit, String query) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> pageOfTags = postRepository.findAllPostsBySearch(query, pageable);
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(createPostResponse(pageOfTags, (int) pageOfTags.getTotalElements()));
     }
@@ -79,7 +74,6 @@ public class PostServiceImpl implements PostService {
     public ResponseEntity<?> getPostsByDate(int offset, int limit, String date) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> postPage = postRepository.findAllPostsByDate(date, pageable);
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(createPostResponse(postPage, (int) postPage.getTotalElements()));
     }
@@ -88,7 +82,6 @@ public class PostServiceImpl implements PostService {
     public ResponseEntity<?> getPostsByTag(int offset, int limit, String tag) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> postPage = postRepository.findAllPostsByTag(tag, pageable);
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(createPostResponse(postPage, (int) postPage.getTotalElements()));
     }
@@ -98,19 +91,15 @@ public class PostServiceImpl implements PostService {
         List<PostComment> commentsList = commentRepository.findPostCommentsById(id);
         List<String> tagList = tagRepository.findTagsById(id);
         List<CommentResponse> commentResponseList = new ArrayList<>();
-
         for (PostComment c : commentsList) {
             commentResponseList.add(new CommentResponse(c));
         }
-
         Post post;
-
         if (!(principal == null)) {
             post = postRepository.findPostById(id);
             if (post == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-
             User user = null;
             try {
                 user = userRepository.findByEmail(principal.getName())
@@ -118,7 +107,6 @@ public class PostServiceImpl implements PostService {
             } catch (UsernameNotFoundException e) {
                 e.printStackTrace();
             }
-
             if (!(post.getUser().getId() == user.getId()) || user.getIsModerator() == 0) {
                 post.setViewCount(post.getViewCount() + 1);
                 postRepository.save(post);
@@ -135,6 +123,31 @@ public class PostServiceImpl implements PostService {
                 .body(new PostResponse(commentResponseList, post, tagList));
     }
 
+    @Override
+    public ResponseEntity<?> getPostsMy(int offset, int limit, String status, Principal principal) {
+        Pageable pageable;
+        pageable = PageRequest.of(offset / limit, limit);
+
+        switch (status) {
+            case "inactive": {
+                Page<Post> pageMy = postRepository.findPostsMyInactive(pageable, principal.getName());
+                return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
+            }
+            case "pending": {
+                Page<Post> pageMy = postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
+                return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
+            }
+            case "declined": {
+                Page<Post> pageMy = postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
+                return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
+            }
+            case "published": {
+                Page<Post> pageMy = postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
+                return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
+            }
+        }
+        return null;
+    }
 
     private PostsResponse createPostResponse(Page<Post> pageTags, int size) {
         List<PostResponseList> postResponseList = new ArrayList<>();

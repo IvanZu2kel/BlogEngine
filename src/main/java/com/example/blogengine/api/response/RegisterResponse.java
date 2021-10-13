@@ -1,5 +1,8 @@
 package com.example.blogengine.api.response;
 
+import lombok.Data;
+
+@Data
 public class RegisterResponse {
 
     private final Boolean result;
