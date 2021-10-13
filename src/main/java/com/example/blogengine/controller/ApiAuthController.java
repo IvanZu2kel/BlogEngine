@@ -1,6 +1,8 @@
 package com.example.blogengine.controller;
 
+import com.example.blogengine.api.request.LoginRequest;
 import com.example.blogengine.api.request.UserRequest;
+import com.example.blogengine.api.response.LoginResponse;
 import com.example.blogengine.api.response.RegisterResponse;
 import com.example.blogengine.service.CaptchaService;
 import com.example.blogengine.service.CheckService;
@@ -42,5 +44,12 @@ public class ApiAuthController {
     @PostMapping("/register")
     public RegisterResponse postRegister(@RequestBody UserRequest userRequest) {
         return registerService.postRegister(userRequest);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        System.out.println(loginRequest.getEmail());
+        System.out.println(loginRequest.getPassword());
+        return new ResponseEntity<>(new LoginResponse(), HttpStatus.OK);
     }
 }
