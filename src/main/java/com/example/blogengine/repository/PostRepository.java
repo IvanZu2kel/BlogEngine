@@ -55,11 +55,11 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "ORDER BY p.time", nativeQuery = true)
     Post findPostAcceptedById(int id);
 
-    @Query(value = "SELECT * FROM posts p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 0 AND p.`time` < NOW() " +
+    @Query(value = "SELECT * FROM posts p JOIN users u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 0 AND p.`time` < NOW() " +
             "ORDER BY p.time DESC", nativeQuery = true)
     Page<Post> findPostsMyInactive(Pageable pageable, @Param("email") String email);
 
-    @Query(value = "SELECT * FROM posts p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 1 AND p.moderation_status = :status " +
+    @Query(value = "SELECT * FROM posts p JOIN users u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 1 AND p.moderation_status = :status " +
             "AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
     Page<Post> findPostsMyIsActive(@Param("status") String status, @Param("email") String email, Pageable pageable);
 }
