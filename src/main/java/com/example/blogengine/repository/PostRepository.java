@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -56,14 +55,11 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "ORDER BY p.time", nativeQuery = true)
     Post findPostAcceptedById(int id);
 
-    @Query(value = "SELECT * FROM post p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 0 AND p.`time` < NOW() " +
+    @Query(value = "SELECT * FROM posts p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 0 AND p.`time` < NOW() " +
             "ORDER BY p.time DESC", nativeQuery = true)
-    Page<Post> findPostsMyInactive(Pageable pageable, String name);
+    Page<Post> findPostsMyInactive(Pageable pageable, @Param("email") String email);
 
-    @Query(value = "SELECT * FROM post p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 1 AND p.moderation_status = :status " +
+    @Query(value = "SELECT * FROM posts p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 1 AND p.moderation_status = :status " +
             "AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
-    Page<Post> findPostsMyIsActive(String aNew, String name, Pageable pageable);
-
-
-
+    Page<Post> findPostsMyIsActive(@Param("status") String status, @Param("email") String email, Pageable pageable);
 }
