@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -14,8 +15,8 @@ import java.util.List;
 @Table(name = "posts")
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NonNull
@@ -52,9 +53,11 @@ public class Post {
     @Column(name = "view_count", columnDefinition = "int")
     @NonNull
     private int viewCount;
-
-    @OneToMany(mappedBy = "post")
-    private List<Tag2Post> tags;
+    @ManyToMany()
+    @JoinTable(name = "tag2post",
+            joinColumns = {@JoinColumn(name = "post_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
+    private List<Tag> tags;
 
     @OneToMany(mappedBy = "post")
     private List<PostVotes> like;

@@ -2,6 +2,7 @@ package com.example.blogengine.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
@@ -9,17 +10,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "tag2post")
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Tag2Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false, referencedColumnName = "id")
-    private Post post;
+    private int post_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id", nullable = false, referencedColumnName = "id")
-    private Tag tag;
+    private int tag_id;
 }

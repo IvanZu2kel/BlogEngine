@@ -3,6 +3,7 @@ package com.example.blogengine.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name = "post_comments")
 @NoArgsConstructor
+@Accessors(chain = true)
 public class PostComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

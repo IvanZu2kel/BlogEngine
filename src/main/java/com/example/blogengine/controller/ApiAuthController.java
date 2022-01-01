@@ -8,6 +8,8 @@ import com.example.blogengine.service.CaptchaService;
 import com.example.blogengine.service.CheckService;
 import com.example.blogengine.service.LoginService;
 import com.example.blogengine.service.RegisterService;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,26 +20,14 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.security.Principal;
 
-
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class ApiAuthController {
-
     private final CheckService checkService;
     private final CaptchaService captchaService;
     private final RegisterService registerService;
     private final LoginService loginService;
-
-    @Autowired
-    public ApiAuthController(CheckService checkService,
-                             CaptchaService captchaService,
-                             RegisterService registerService,
-                             LoginService loginService) {
-        this.checkService = checkService;
-        this.captchaService = captchaService;
-        this.registerService = registerService;
-        this.loginService = loginService;
-    }
 
     @GetMapping("/check")
     public ResponseEntity<?> check(Principal principal){

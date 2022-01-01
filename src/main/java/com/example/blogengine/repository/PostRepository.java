@@ -12,7 +12,6 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
-
     @Query(value = "SELECT * from posts p where p.moderation_status = 'NEW'", nativeQuery = true)
     List<Post> findPostByModerationStatus();
 
