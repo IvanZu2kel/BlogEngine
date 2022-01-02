@@ -1,7 +1,11 @@
 package com.example.blogengine.controller;
 
+import com.example.blogengine.api.response.PostsResponse;
+import com.example.blogengine.exception.PostNotFoundException;
+import com.example.blogengine.exception.UsernameNotFoundException;
 import com.example.blogengine.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,42 +19,44 @@ public class ApiPostController {
     private final PostService postService;
 
     @GetMapping("")
-    public ResponseEntity<?> getPosts(@RequestParam(defaultValue = "0") int offset,
-                                      @RequestParam(defaultValue = "10") int limit,
-                                      @RequestParam(defaultValue = "") String mode) {
-        return ResponseEntity.ok(postService.getPosts(offset, limit, mode));
+    public ResponseEntity<PostsResponse> getPosts(@RequestParam(defaultValue = "0") int offset,
+                                                  @RequestParam(defaultValue = "10") int limit,
+                                                  @RequestParam(defaultValue = "") String mode) {
+        return new ResponseEntity<>(postService.getPosts(offset, limit, mode), HttpStatus.OK);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> getPostsByQuery(@RequestParam(required = false, defaultValue = "0") int offset,
-                                             @RequestParam(required = false, defaultValue = "10") int limit,
-                                             @RequestParam(required = false, defaultValue = " ") String query) {
-        return postService.getPostsSearch(offset, limit, query);
+    public ResponseEntity<PostsResponse> getPostsByQuery(@RequestParam(required = false, defaultValue = "0") int offset,
+                                                         @RequestParam(required = false, defaultValue = "10") int limit,
+                                                         @RequestParam(required = false, defaultValue = " ") String query) {
+        return new ResponseEntity<>(postService.getPostsSearch(offset, limit, query), HttpStatus.OK);
     }
 
     @GetMapping("/byDate")
-    public ResponseEntity<?> getPostsByDate(@RequestParam(required = false, defaultValue = "0") int offset,
-                                            @RequestParam(required = false, defaultValue = "10") int limit,
-                                            @RequestParam(required = false, defaultValue = "") String date) {
-        return postService.getPostsByDate(offset, limit, date);
+    public ResponseEntity<PostsResponse> getPostsByDate(@RequestParam(required = false, defaultValue = "0") int offset,
+                                                        @RequestParam(required = false, defaultValue = "10") int limit,
+                                                        @RequestParam(required = false, defaultValue = "") String date) {
+        return new ResponseEntity<>(postService.getPostsByDate(offset, limit, date), HttpStatus.OK);
     }
 
     @GetMapping("/byTag")
-    public ResponseEntity<?> getPostsByTag(@RequestParam(required = false, defaultValue = "0") int offset,
-                                           @RequestParam(required = false, defaultValue = "10") int limit,
-                                           @RequestParam(required = false, defaultValue = "") String tag) {
-        return postService.getPostsByTag(offset, limit, tag);
+    public ResponseEntity<PostsResponse> getPostsByTag(@RequestParam(required = false, defaultValue = "0") int offset,
+                                                       @RequestParam(required = false, defaultValue = "10") int limit,
+                                                       @RequestParam(required = false, defaultValue = "") String tag) {
+        return new ResponseEntity<>(postService.getPostsByTag(offset, limit, tag), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getPostsById(@PathVariable int id, Principal principal) {
-        return postService.getPostsById(id, principal);
+    public ResponseEntity<?> getPostsById(@PathVariable int id,
+                                          Principal principal) throws UsernameNotFoundException, PostNotFoundException {
+        return new ResponseEntity<>(postService.getPostsById(id, principal), HttpStatus.OK);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<?> getPostsMy(@RequestParam(required = false, defaultValue = "0") int offset,
-                                        @RequestParam(required = false, defaultValue = "10") int limit,
-                                        @RequestParam(required = false, defaultValue = "") String status,
-                                        Principal principal) {
-        return ResponseEntity.ok(postService.getPostsMy(offset, limit, status, principal));
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<PostsResponse> getPostsMy(@RequestParam(required = false, defaultValue = "0") int offset,
+                                                    @RequestParam(required = false, defaultValue = "10") int limit,
+                                                    @RequestParam(required = false, defaultValue = "") String status,
+                                                    Principal principal) {
+        return new ResponseEntity<>(postService.getPostsMy(offset, limit, status, principal), HttpStatus.OK);
     }
 }

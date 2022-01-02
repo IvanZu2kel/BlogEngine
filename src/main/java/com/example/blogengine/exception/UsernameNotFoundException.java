@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class UsernameNotFoundException extends Exception{
-    public UsernameNotFoundException(String name) {
-
+    public UsernameNotFoundException(String message) {
+        super(message);
     }
 }

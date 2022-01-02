@@ -1,14 +1,13 @@
 package com.example.blogengine.service.implementation;
 
 import com.example.blogengine.api.response.*;
+import com.example.blogengine.exception.PostNotFoundException;
 import com.example.blogengine.exception.UsernameNotFoundException;
 import com.example.blogengine.model.Post;
 import com.example.blogengine.model.PostComment;
+import com.example.blogengine.model.PostVotes;
 import com.example.blogengine.model.User;
-import com.example.blogengine.repository.CommentRepository;
-import com.example.blogengine.repository.PostRepository;
-import com.example.blogengine.repository.TagRepository;
-import com.example.blogengine.repository.UserRepository;
+import com.example.blogengine.repository.*;
 import com.example.blogengine.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -30,6 +31,7 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
+    private final PostVotesRepository postVotesRepository;
 
     public PostsResponse getPosts(int offset, int limit, String mode) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
@@ -43,28 +45,38 @@ public class PostServiceImpl implements PostService {
         return createPostResponse(postPage, postRepository.findAllPosts().size());
     }
 
-    public ResponseEntity<?> getPostsSearch(int offset, int limit, String query) {
+    public PostsResponse getPostsSearch(int offset, int limit, String query) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
-        Page<Post> pageOfTags = postRepository.findAllPostsBySearch(query, pageable);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(createPostResponse(pageOfTags, (int) pageOfTags.getTotalElements()));
+        Page<Post> pageOfTags;
+        if (query.trim().equals("")) {
+            pageOfTags = postRepository.findAllPostsByTimeDesc(pageable);
+        } else {
+            pageOfTags = postRepository.findAllPostsBySearch(query, pageable);
+        }
+        return createPostResponse(pageOfTags, (int) pageOfTags.getTotalElements());
     }
 
-    public ResponseEntity<?> getPostsByDate(int offset, int limit, String date) {
+    public PostsResponse getPostsByDate(int offset, int limit, String date) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> postPage = postRepository.findAllPostsByDate(date, pageable);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(createPostResponse(postPage, (int) postPage.getTotalElements()));
+        return createPostResponse(postPage, (int) postPage.getTotalElements());
     }
 
-    public ResponseEntity<?> getPostsByTag(int offset, int limit, String tag) {
+    public PostsResponse getPostsByTag(int offset, int limit, String tag) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> postPage = postRepository.findAllPostsByTag(tag, pageable);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(createPostResponse(postPage, (int) postPage.getTotalElements()));
+        return createPostResponse(postPage, (int) postPage.getTotalElements());
     }
 
-    public ResponseEntity<?> getPostsById(int id, Principal principal) {
+    public PostResponse getPostsById(int id, Principal principal) throws UsernameNotFoundException, PostNotFoundException {
+        Post post = postRepository.findPostById(id)
+                .orElseThrow(() -> new PostNotFoundException("Поста с данным id не существует"));
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+        if (!post.getUser().equals(user) || user.getIsModerator() == 0) {
+            post.setViewCount(post.getViewCount() + 1);
+            postRepository.save(post);
+        }
         List<PostComment> commentsList = commentRepository.findPostCommentsById(id);
         List<String> tagList = tagRepository.findTagsById(id);
         List<CommentResponse> commentResponseList = new ArrayList<>();
@@ -76,68 +88,107 @@ public class PostServiceImpl implements PostService {
                     .setUser(new UserPostResponse().setId(c.getUser().getId()).setName(c.getUser().getName()))
             );
         }
-        Post post;
-        if (!(principal == null)) {
-            post = postRepository.findPostById(id);
-            if (post == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-            User user = null;
-            try {
-                user = userRepository.findByEmail(principal.getName())
-                        .orElseThrow(() -> new UsernameNotFoundException("user not found"));
-            } catch (UsernameNotFoundException e) {
-                e.printStackTrace();
-            }
-            if (!(post.getUser().getId() == user.getId()) || user.getIsModerator() == 0) {
-                post.setViewCount(post.getViewCount() + 1);
-                postRepository.save(post);
-            }
-        } else {
-            post = postRepository.findPostAcceptedById(id);
-            if (post == null) {
-                return null;
-            }
-            post.setViewCount(post.getViewCount() + 1);
-            postRepository.save(post);
-        }
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new PostResponse(commentResponseList, post, tagList));
+        return getPostResponse(commentResponseList, post, tagList);
     }
 
-    public ResponseEntity<?> getPostsMy(int offset, int limit, String status, Principal principal) {
+    public PostsResponse getPostsMy(int offset, int limit, String status, Principal principal) {
         Pageable pageable;
         pageable = PageRequest.of(offset / limit, limit);
-
         switch (status) {
-            case "inactive" -> {
-                Page<Post> pageMy = postRepository.findPostsMyInactive(pageable, principal.getName());
-                return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
-            }
-            case "pending" -> {
-                Page<Post> pageMy = postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
-                return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
-            }
-            case "declined" -> {
-                Page<Post> pageMy = postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
-                return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
-            }
-            case "published" -> {
-                Page<Post> pageMy = postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
-                return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
-            }
+            case "inactive" -> postRepository.findPostsMyInactive(pageable, principal.getName());
+            case "pending" -> postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
+            case "declined" -> postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
+            case "published" -> postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
         }
         return null;
     }
 
     private PostsResponse createPostResponse(Page<Post> pageTags, int size) {
         List<PostResponseList> postResponseList = new ArrayList<>();
-        for (Post p : pageTags) {
-            postResponseList.add(new PostResponseList(p));
+        for (Post post : pageTags) {
+            postResponseList.add(getPostResponseList(post));
         }
-        PostsResponse postsResponse = new PostsResponse();
-        postsResponse.setPosts(postResponseList);
-        postsResponse.setCount(size);
-        return postsResponse;
+        return new PostsResponse()
+                .setPosts(postResponseList)
+                .setCount(size);
+    }
+
+    private PostResponseList getPostResponseList(Post post) {
+        List<PostVotes> likeAndDislike = postVotesRepository.getAllByPostId(post.getId());
+        return new PostResponseList()
+                .setActive(post.getIsActive() == 1)
+                .setId(post.getId())
+                .setTimestamp(post.getTime().toInstant().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000)
+                .setUser(new UserPostResponse().setName(post.getUser().getName()).setId(post.getUser().getId()))
+                .setTitle(post.getTitle())
+                .setAnnounce(setAnnounce(post))
+                .setLikeCount(getLikeCount(likeAndDislike))
+                .setDislikeCount(getDislikeCount(likeAndDislike))
+                .setViewCount(post.getViewCount())
+                .setCommentCount(setCommentCount(post));
+    }
+
+    private PostResponse getPostResponse(List<CommentResponse> commentResponseList, Post post, List<String> tagList) {
+        List<PostVotes> likeAndDislike = postVotesRepository.getAllByPostId(post.getId());
+        return new PostResponse()
+                .setId(post.getId())
+                .setTimestamp(post.getTime().toInstant().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000)
+                .setActive(post.getIsActive() == 1)
+                .setUser(new UserPostResponse().setName(post.getUser().getName()).setId(post.getUser().getId()))
+                .setTitle(post.getTitle())
+                .setText(post.getText())
+                .setTags(tagList)
+                .setComments(commentResponseList)
+                .setDislikeCount(getDislikeCount(likeAndDislike))
+                .setLikeCount(getLikeCount(likeAndDislike))
+                .setViewCount(post.getViewCount());
+    }
+
+    private long setCommentCount(Post post) {
+        int commentCount;
+        if (!(post.getComments() == null)) {
+            commentCount = post.getComments().size();
+        } else {
+            commentCount = 0;
+        }
+        return commentCount;
+    }
+
+    public long getDislikeCount(List<PostVotes> postVotes) {
+        long dislikeCount = 0;
+        if (postVotes.size() != 0) {
+            LinkedList<PostVotes> like = new LinkedList<>(postVotes);
+            for (PostVotes l : like) {
+                if (l.getValue() == 0) {
+                    dislikeCount++;
+                }
+            }
+        }
+        return dislikeCount;
+    }
+
+    private String setAnnounce(Post post) {
+        String announce = post.getText()
+                .replaceAll("</div>", " ")
+                .replaceAll("\\<.*?\\>", "")
+                .replaceAll("&nbsp;", " ");
+        if (announce.length() > 400) {
+            return announce.substring(0, 400) + "...";
+        }
+        return announce;
+    }
+
+    public long getLikeCount(List<PostVotes> postVotes) {
+        long likeCount = 0;
+        if (postVotes.size() != 0) {
+            LinkedList<PostVotes> like = new LinkedList<>(postVotes);
+            for (PostVotes l : like) {
+                if (l.getValue() == 1) {
+                    likeCount++;
+                }
+            }
+        }
+        return likeCount;
     }
 }
+

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
@@ -35,7 +36,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "p.time", nativeQuery = true)
     List<Post> findAllPosts();
 
-    @Query(value = "select * from posts p where p.`time` like %:query% and p.is_active = 1 and p.moderation_status = 'ACCEPTED' and p.`time` <= NOW() " +
+    @Query(value = "select * from posts p where ( p.text like %:query% or p.title like %:query% ) and p.is_active = 1 and p.moderation_status = 'ACCEPTED' and p.`time` <= NOW() " +
             "order by p.`time` desc", nativeQuery = true)
     Page<Post> findAllPostsBySearch(String query, Pageable pageable);
 
@@ -48,11 +49,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Page<Post> findAllPostsByTag(@Param("tag") String tag, Pageable pageable);
 
     @Query(value = "SELECT * FROM posts p WHERE p.id = :id", nativeQuery = true)
-    Post findPostById(@Param("id") int id);
-
-    @Query(value = "SELECT * FROM posts p WHERE p.id = :id AND p.moderation_status = 'ACCEPTED' AND p.`time` <= NOW() " +
-            "ORDER BY p.time", nativeQuery = true)
-    Post findPostAcceptedById(int id);
+    Optional<Post> findPostById(@Param("id") int id);
 
     @Query(value = "SELECT * FROM posts p JOIN users u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 0 AND p.`time` <= NOW() " +
             "ORDER BY p.time DESC", nativeQuery = true)

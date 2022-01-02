@@ -1,7 +1,9 @@
 package com.example.blogengine.service;
 
+import com.example.blogengine.api.response.PostResponse;
 import com.example.blogengine.api.response.PostsResponse;
-import org.springframework.http.ResponseEntity;
+import com.example.blogengine.exception.PostNotFoundException;
+import com.example.blogengine.exception.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -10,13 +12,13 @@ import java.security.Principal;
 public interface PostService {
     PostsResponse getPosts(int offset, int limit, String mode);
 
-    ResponseEntity<?> getPostsSearch(int offset, int limit, String query);
+    PostsResponse getPostsSearch(int offset, int limit, String query);
 
-    ResponseEntity<?> getPostsByDate(int offset, int limit, String date);
+    PostsResponse getPostsByDate(int offset, int limit, String date);
 
-    ResponseEntity<?> getPostsByTag(int offset, int limit, String tag);
+    PostsResponse getPostsByTag(int offset, int limit, String tag);
 
-    ResponseEntity<?> getPostsById(int id, Principal principal);
+    PostResponse getPostsById(int id, Principal principal) throws UsernameNotFoundException, PostNotFoundException;
 
-    ResponseEntity<?> getPostsMy(int offset, int limit, String status, Principal principal);
+    PostsResponse getPostsMy(int offset, int limit, String status, Principal principal);
 }
