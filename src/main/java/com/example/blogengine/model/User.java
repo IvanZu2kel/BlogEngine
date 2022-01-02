@@ -1,12 +1,12 @@
 package com.example.blogengine.model;
 
+import com.example.blogengine.model.enumerated.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -28,7 +28,7 @@ public class User {
 
     @Column(name = "reg_time", columnDefinition = "datetime NOT NULL COMMENT 'дата и время регистрации пользователя'")
     @NonNull
-    private LocalDateTime regTime;
+    private Date regTime;
 
     @Column(columnDefinition = "varchar(255) NOT NULL COMMENT 'имя пользователя'")
     @NonNull

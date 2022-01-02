@@ -1,9 +1,6 @@
 package com.example.blogengine.service.implementation;
 
-import com.example.blogengine.api.response.CommentResponse;
-import com.example.blogengine.api.response.PostResponse;
-import com.example.blogengine.api.response.PostResponseList;
-import com.example.blogengine.api.response.PostsResponse;
+import com.example.blogengine.api.response.*;
 import com.example.blogengine.exception.UsernameNotFoundException;
 import com.example.blogengine.model.Post;
 import com.example.blogengine.model.PostComment;
@@ -23,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +79,12 @@ public class PostServiceImpl implements PostService {
         List<String> tagList = tagRepository.findTagsById(id);
         List<CommentResponse> commentResponseList = new ArrayList<>();
         for (PostComment c : commentsList) {
-            commentResponseList.add(new CommentResponse(c));
+            commentResponseList.add(new CommentResponse()
+                    .setId(c.getId())
+                    .setTimestamp(c.getTime().getTime()/1000)
+                    .setText(c.getText())
+                    .setUser(new UserPostResponse().setId(c.getUser().getId()).setName(c.getUser().getName()))
+            );
         }
         Post post;
         if (!(principal == null)) {

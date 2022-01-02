@@ -1,4 +1,4 @@
-package com.example.blogengine.model;
+package com.example.blogengine.model.enumerated;
 
 public enum ModerationStatus {
     NEW,

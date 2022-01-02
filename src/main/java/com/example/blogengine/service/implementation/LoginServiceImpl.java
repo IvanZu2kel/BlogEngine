@@ -7,21 +7,18 @@ import com.example.blogengine.model.User;
 import com.example.blogengine.repository.UserRepository;
 import com.example.blogengine.service.LoginService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 
 @Controller
 @RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
-
 
     public LoginResponse postLogin(LoginRequest loginRequest) {
         Authentication auth = authenticationManager
@@ -40,18 +37,17 @@ public class LoginServiceImpl implements LoginService {
     }
 
     private UserLoginResponse getUserLoginResponse(User user) {
-        UserLoginResponse userLoginResponse = new UserLoginResponse();
-        userLoginResponse.setName(user.getName());
-        userLoginResponse.setModeration(user.getIsModerator() == 1);
-        userLoginResponse.setEmail(user.getEmail());
-        userLoginResponse.setId(user.getId());
-        return userLoginResponse;
+        return new UserLoginResponse()
+                .setId(user.getId())
+                .setName(user.getName())
+                .setPhoto(user.getPhoto())
+                .setEmail(user.getEmail())
+                .setModeration(user.getIsModerator() == 1);
     }
 
     private LoginResponse getLoginResponse(UserLoginResponse userLoginResponse) {
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setResult(true);
-        loginResponse.setUserLoginResponse(userLoginResponse);
-        return loginResponse;
+        return new LoginResponse()
+                .setResult(true)
+                .setUserLoginResponse(userLoginResponse);
     }
 }

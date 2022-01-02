@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Controller
@@ -46,8 +48,8 @@ public class RegisterServiceImpl implements RegisterService {
                     .setEmail(userRequest.getEMail())
                     .setName(userRequest.getName())
                     .setPassword(userRequest.getPassword())
-                    .setRegTime(LocalDateTime.now());
-
+                    .setRegTime(Date.from(Instant.from(LocalDateTime.now())))
+                    .setIsModerator(0);
             userRepository.save(user);
             return new RegisterResponse(true);
         }

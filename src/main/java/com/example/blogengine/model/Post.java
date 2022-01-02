@@ -1,5 +1,6 @@
 package com.example.blogengine.model;
 
+import com.example.blogengine.model.enumerated.ModerationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,6 @@ import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class Post {
     private User user;
 
     @NonNull
-    private LocalDateTime time;
+    private Date time;
 
     @NonNull
     @Column(columnDefinition = "varchar(255)")

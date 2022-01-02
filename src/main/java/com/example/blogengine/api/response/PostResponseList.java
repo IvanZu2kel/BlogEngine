@@ -4,13 +4,15 @@ import com.example.blogengine.model.Post;
 import com.example.blogengine.model.PostComment;
 import com.example.blogengine.model.PostVotes;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Accessors(chain = true)
 public class PostResponseList {
-
     private long id;
     private long timestamp;
     private UserPostResponse user;
@@ -27,8 +29,8 @@ public class PostResponseList {
 
     public PostResponseList(Post post) {
         this.id = post.getId();
-        this.timestamp = post.getTime().getTime() / 1000;
-        this.user = new UserPostResponse(post.getUser());
+        this.timestamp = post.getTime().getTime()/1000;
+        this.user = new UserPostResponse().setName(post.getUser().getName()).setId(post.getUser().getId());
         this.title = post.getTitle();
         this.announce = setAnnounce(post);
         this.likeCount = getLikeCount(post);

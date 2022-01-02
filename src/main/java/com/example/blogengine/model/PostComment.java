@@ -6,7 +6,6 @@ import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -33,7 +32,7 @@ public class PostComment {
     private User user;
 
     @NonNull
-    private LocalDateTime time;
+    private Date time;
 
     @Column(columnDefinition = "text")
     @NonNull

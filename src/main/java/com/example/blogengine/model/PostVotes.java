@@ -29,7 +29,7 @@ public class PostVotes {
     private Post post;
 
     @NonNull
-    private LocalDateTime time;
+    private Date time;
 
     @Column(name = "value", columnDefinition = "tinyint(1)")
     @NonNull
