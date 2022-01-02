@@ -2,15 +2,12 @@ package com.example.blogengine.controller;
 
 import com.example.blogengine.api.request.LoginRequest;
 import com.example.blogengine.api.request.UserRequest;
-import com.example.blogengine.api.response.LoginResponse;
 import com.example.blogengine.api.response.RegisterResponse;
 import com.example.blogengine.service.CaptchaService;
 import com.example.blogengine.service.CheckService;
 import com.example.blogengine.service.LoginService;
 import com.example.blogengine.service.RegisterService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,7 +48,7 @@ public class ApiAuthController {
 
     @GetMapping("/logout")
     @PreAuthorize("hasAuthority('user:write')")
-    public ResponseEntity getLogout(Principal principal){
+    public ResponseEntity getLogout(){
         SecurityContextHolder.clearContext();
         return new ResponseEntity<>(new RegisterResponse(true), HttpStatus.OK);
     }

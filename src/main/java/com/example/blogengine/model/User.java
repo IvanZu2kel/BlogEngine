@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -27,7 +28,7 @@ public class User {
 
     @Column(name = "reg_time", columnDefinition = "datetime NOT NULL COMMENT 'дата и время регистрации пользователя'")
     @NonNull
-    private Date regTime;
+    private LocalDateTime regTime;
 
     @Column(columnDefinition = "varchar(255) NOT NULL COMMENT 'имя пользователя'")
     @NonNull

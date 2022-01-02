@@ -7,27 +7,19 @@ import com.example.blogengine.api.response.TagsResponse;
 import com.example.blogengine.service.CalendarService;
 import com.example.blogengine.service.SettingsService;
 import com.example.blogengine.service.TagService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController()
+@RestController
+@RequiredArgsConstructor
 public class ApiGeneralController {
-
     private final SettingsService settingsService;
     private final InitResponse initResponse;
     private final TagService tagService;
     private final CalendarService calendarService;
-
-    @Autowired
-    public ApiGeneralController(SettingsService settingsService, InitResponse initResponse, TagService tagService, CalendarService calendarService) {
-        this.settingsService = settingsService;
-        this.initResponse = initResponse;
-        this.tagService = tagService;
-        this.calendarService = calendarService;
-    }
-
 
     @GetMapping("/api/init")
     private InitResponse init(){

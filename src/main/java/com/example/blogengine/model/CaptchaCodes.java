@@ -6,7 +6,7 @@ import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -19,7 +19,7 @@ public class CaptchaCodes {
     @NonNull
     private int id;
     @NonNull
-    private Date time;
+    private LocalDateTime time;
     @NonNull
     @Column(columnDefinition = "tinytext")
     private String code;

@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -28,7 +29,7 @@ public class PostVotes {
     private Post post;
 
     @NonNull
-    private Date time;
+    private LocalDateTime time;
 
     @Column(name = "value", columnDefinition = "tinyint(1)")
     @NonNull

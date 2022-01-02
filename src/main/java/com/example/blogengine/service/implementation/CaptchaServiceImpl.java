@@ -64,6 +64,6 @@ public class CaptchaServiceImpl implements CaptchaService {
     }
 
     private String generateSecretKey() {
-        return RandomStringUtils.randomAlphanumeric(10);
+        return RandomStringUtils.randomAlphanumeric(6);
     }
 }
