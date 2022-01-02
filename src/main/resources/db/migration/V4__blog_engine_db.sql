@@ -1,9 +1,9 @@
 insert into users(code, email, is_moderator, `name`, password, photo, reg_time)
-values ('test@test.ru', 'test@test.ru', 0, 'Иван Талерантов', '$2y$12$RrhSR3qnVbpk4yBuqAgXb.xtGerpj8Jo5RIqPM.OtbmT/R.YyrspK', null,
+values ('test@test.ru', 'test@test.ru', 0, 'Иван Талерантов', '$2a$12$L.N1C9vvjo1WYRu/4CCcEO7qraGien3lZcChAjoq20YfnxD8ST35a', null,
         now())
-     , ('123', 'test2@mail.ru', 0, 'Леша Токарев', '$2y$12$PB9KG0cthVErpLN1jX46/O7z3VhrldGp/mDT6dksygrR4Of4eehoe',
+     , ('123', 'test2@mail.ru', 0, 'Леша Токарев', '$2a$12$ab/4xzSYuPA6PdGg9CkcTuR/2/8Z0Pbxj4nf0Araq/pnZWXthWG3.',
         null, now())
-     , ('123', 'test3@mail.ru', 1, 'Дарья Куцевалова', '$2y$12$lNZlcHGLfhNB/G1JBAGPye3NFLge.x7bSyRfcEDYPSMEBLa7ipYwy',
+     , ('123', 'test3@mail.ru', 1, 'Дарья Куцевалова', '$2a$12$XAC5jhY3gr4q3Dp32azTHeF.EN9BmY0LHYQ1jboaStVrxCX.xTrmO',
         null, now());
 
 insert into tags(name)

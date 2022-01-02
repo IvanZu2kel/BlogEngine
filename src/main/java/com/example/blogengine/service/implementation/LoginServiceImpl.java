@@ -4,6 +4,7 @@ import com.example.blogengine.api.request.LoginRequest;
 import com.example.blogengine.api.response.LoginResponse;
 import com.example.blogengine.api.response.UserLoginResponse;
 import com.example.blogengine.model.User;
+import com.example.blogengine.repository.PostRepository;
 import com.example.blogengine.repository.UserRepository;
 import com.example.blogengine.service.LoginService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 public class LoginServiceImpl implements LoginService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     public LoginResponse postLogin(LoginRequest loginRequest) {
         Authentication auth = authenticationManager
@@ -37,12 +39,21 @@ public class LoginServiceImpl implements LoginService {
     }
 
     private UserLoginResponse getUserLoginResponse(User user) {
-        return new UserLoginResponse()
+        UserLoginResponse userLoginResponse = new UserLoginResponse()
                 .setId(user.getId())
                 .setName(user.getName())
                 .setPhoto(user.getPhoto())
-                .setEmail(user.getEmail())
-                .setModeration(user.getIsModerator() == 1);
+                .setEmail(user.getEmail());
+        if (user.getIsModerator() == (byte) 1) {
+            userLoginResponse.setModeration(true)
+                    .setModerationCount(postRepository.findPostByModerationStatus().size())
+                    .setSettings(true);
+        } else {
+            userLoginResponse.setModeration(false)
+                    .setModerationCount(0)
+                    .setSettings(false);
+        }
+        return userLoginResponse;
     }
 
     private LoginResponse getLoginResponse(UserLoginResponse userLoginResponse) {
