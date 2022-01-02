@@ -18,7 +18,6 @@ public class SettingsServiceImpl implements SettingsService {
     public SettingsResponse getGlobalSettings() {
         SettingsResponse settingsResponse = new SettingsResponse();
         List<GlobalSettings> globalSettings = globalSettingsRepository.findAll();
-
         if (globalSettings.size() != 0) {
             Optional<GlobalSettings> multiuserMode = globalSettings.stream()
                     .filter(gs -> gs.getCode().equals("MULTIUSER_MODE"))

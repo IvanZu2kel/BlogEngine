@@ -61,4 +61,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query(value = "SELECT * FROM posts p JOIN users u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 1 AND p.moderation_status = :status " +
             "AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
     Page<Post> findPostsMyIsActive(@Param("status") String status, @Param("email") String email, Pageable pageable);
+
+    @Query("select p from Post p")
+    List<Post> findPosts();
 }
