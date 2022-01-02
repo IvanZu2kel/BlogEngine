@@ -3,16 +3,18 @@ package com.example.blogengine.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-public class User
-{
+@Accessors(chain = true)
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NonNull
@@ -26,7 +28,7 @@ public class User
 
     @Column(name = "reg_time", columnDefinition = "datetime NOT NULL COMMENT 'дата и время регистрации пользователя'")
     @NonNull
-    private Date regTime;
+    private LocalDateTime regTime;
 
     @Column(columnDefinition = "varchar(255) NOT NULL COMMENT 'имя пользователя'")
     @NonNull

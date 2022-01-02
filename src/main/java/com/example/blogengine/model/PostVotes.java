@@ -3,16 +3,18 @@ package com.example.blogengine.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "post_votes")
 @NoArgsConstructor
+@Accessors(chain = true)
 public class PostVotes {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NonNull
@@ -27,7 +29,7 @@ public class PostVotes {
     private Post post;
 
     @NonNull
-    private Date time;
+    private LocalDateTime time;
 
     @Column(name = "value", columnDefinition = "tinyint(1)")
     @NonNull

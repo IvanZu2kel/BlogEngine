@@ -2,6 +2,7 @@ package com.example.blogengine.security;
 
 import com.example.blogengine.model.User;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,12 +11,11 @@ import java.util.Collection;
 import java.util.Set;
 
 @Data
+@RequiredArgsConstructor
 public class SecurityUser implements UserDetails {
-
     private final String username;
     private final String password;
     private final Set<SimpleGrantedAuthority> authorities;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

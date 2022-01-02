@@ -3,6 +3,7 @@ package com.example.blogengine.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
@@ -10,8 +11,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "global_settings")
 @NoArgsConstructor
+@Accessors(chain = true)
 public class GlobalSettings {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NonNull

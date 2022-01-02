@@ -11,7 +11,7 @@ create table captcha_codes
     id          INT COMMENT 'id каптча' not null auto_increment,
     code        TINYTEXT COMMENT 'код, отображаемый на картинкке капчи' not null,
     secret_code TINYTEXT COMMENT 'код, передаваемый в параметре' not null,
-    time        datetime COMMENT 'дата и время генерации кода капчи' not null,
+    time        TIMESTAMP COMMENT 'дата и время генерации кода капчи' not null,
     primary key (id)
 );
 create table global_settings
@@ -26,7 +26,7 @@ create table post_comments
 (
     id        INT COMMENT 'id комментария' not null auto_increment,
     text      text COMMENT 'текст комментария' not null,
-    time      datetime COMMENT 'дата и время комментария' not null,
+    time      TIMESTAMP COMMENT 'дата и время комментария' not null,
     parent_id INT COMMENT 'комментарий, на который оставлен этот комментарий (может быть NULL, если комментарий оставлен просто к посту)',
     post_id   INT COMMENT 'пост, к которому написан комментарий' not null,
     user_id   INT COMMENT 'автор комментария' not null,
@@ -35,7 +35,7 @@ create table post_comments
 create table post_votes
 (
     id      INT COMMENT 'id лайка/дизлайка' not null auto_increment,
-    time    datetime COMMENT 'дата и время лайка / дизлайка' not null,
+    time    TIMESTAMP COMMENT 'дата и время лайка / дизлайка' not null,
     value   TINYINT COMMENT 'лайк или дизлайк: 1 или -1' not null,
     user_id INT NOT NULL COMMENT 'тот, кто поставил лайк / дизлайк',
     post_id INT NOT NULL COMMENT 'пост, которому поставлен лайк / дизлайк',
@@ -47,7 +47,7 @@ create table posts
     is_active         TINYINT COMMENT 'скрыта или активна публикация: 0 или 1' not null,
     moderation_status enum('NEW','ACCEPTED', 'DECLINED') COMMENT 'статус модерации, по умолчанию значение "NEW"' not null,
     text              text COMMENT 'текст поста' not null,
-    time              datetime COMMENT 'дата и время публикации поста' not null,
+    time              TIMESTAMP COMMENT 'дата и время публикации поста' not null,
     title             VARCHAR(255) COMMENT 'заголовок поста' not null,
     view_count        INT COMMENT 'количество просмотров поста' not null,
     moderator_id      INT COMMENT 'ID пользователя-модератора, принявшего решение, или NULL',
@@ -76,6 +76,6 @@ create table users
     name         VARCHAR(255) COMMENT 'имя пользователя' not null,
     password     VARCHAR(255) COMMENT 'хэш пароля пользователя' not null,
     photo        text COMMENT 'фотография (ссылка на файл), может быть NULL',
-    reg_time     datetime COMMENT 'дата и время регистрации пользователя' not null,
+    reg_time     TIMESTAMP COMMENT 'дата и время регистрации пользователя' not null,
     primary key (id)
 );

@@ -13,11 +13,13 @@ import com.example.blogengine.repository.PostRepository;
 import com.example.blogengine.repository.TagRepository;
 import com.example.blogengine.repository.UserRepository;
 import com.example.blogengine.service.PostService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -25,23 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Service
+@Component
+@RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
-
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
 
-    public PostServiceImpl(PostRepository postRepository,
-                           CommentRepository commentRepository, TagRepository tagRepository, UserRepository userRepository) {
-        this.postRepository = postRepository;
-        this.commentRepository = commentRepository;
-        this.tagRepository = tagRepository;
-        this.userRepository = userRepository;
-    }
-
-    @Override
     public PostsResponse getPosts(int offset, int limit, String mode) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> postPage;
@@ -62,7 +55,6 @@ public class PostServiceImpl implements PostService {
         return createPostResponse(postPage, postRepository.findAllPosts().size());
     }
 
-    @Override
     public ResponseEntity<?> getPostsSearch(int offset, int limit, String query) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> pageOfTags = postRepository.findAllPostsBySearch(query, pageable);
@@ -70,7 +62,6 @@ public class PostServiceImpl implements PostService {
                 .body(createPostResponse(pageOfTags, (int) pageOfTags.getTotalElements()));
     }
 
-    @Override
     public ResponseEntity<?> getPostsByDate(int offset, int limit, String date) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> postPage = postRepository.findAllPostsByDate(date, pageable);
@@ -78,7 +69,6 @@ public class PostServiceImpl implements PostService {
                 .body(createPostResponse(postPage, (int) postPage.getTotalElements()));
     }
 
-    @Override
     public ResponseEntity<?> getPostsByTag(int offset, int limit, String tag) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> postPage = postRepository.findAllPostsByTag(tag, pageable);
@@ -86,7 +76,6 @@ public class PostServiceImpl implements PostService {
                 .body(createPostResponse(postPage, (int) postPage.getTotalElements()));
     }
 
-    @Override
     public ResponseEntity<?> getPostsById(int id, Principal principal) {
         List<PostComment> commentsList = commentRepository.findPostCommentsById(id);
         List<String> tagList = tagRepository.findTagsById(id);
@@ -123,7 +112,6 @@ public class PostServiceImpl implements PostService {
                 .body(new PostResponse(commentResponseList, post, tagList));
     }
 
-    @Override
     public ResponseEntity<?> getPostsMy(int offset, int limit, String status, Principal principal) {
         Pageable pageable;
         pageable = PageRequest.of(offset / limit, limit);

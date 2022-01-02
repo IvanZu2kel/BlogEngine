@@ -4,17 +4,18 @@ import com.example.blogengine.api.response.CalenderResponse;
 import com.example.blogengine.model.Post;
 import com.example.blogengine.repository.PostRepository;
 import com.example.blogengine.service.CalendarService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Service
+@Controller
+@RequiredArgsConstructor
 public class CalendarServiceImpl implements CalendarService {
-
-    @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Override
     public CalenderResponse getCalendar(String year) {

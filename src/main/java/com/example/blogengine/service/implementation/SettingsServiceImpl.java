@@ -4,27 +4,19 @@ import com.example.blogengine.api.response.SettingsResponse;
 import com.example.blogengine.model.GlobalSettings;
 import com.example.blogengine.repository.GlobalSettingsRepository;
 import com.example.blogengine.service.SettingsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-@Service
+@Component
+@RequiredArgsConstructor
 public class SettingsServiceImpl implements SettingsService {
-
     private final GlobalSettingsRepository globalSettingsRepository;
 
-    @Autowired
-    public SettingsServiceImpl(GlobalSettingsRepository globalSettingsRepository) {
-        this.globalSettingsRepository = globalSettingsRepository;
-    }
-
-    @Override
     public SettingsResponse getGlobalSettings() {
         SettingsResponse settingsResponse = new SettingsResponse();
-
         List<GlobalSettings> globalSettings = globalSettingsRepository.findAll();
 
         if (globalSettings.size() != 0) {

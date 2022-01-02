@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GlobalSettingsRepository extends JpaRepository<GlobalSettings, Integer> {
-
     @Query(nativeQuery = true, value = "select s.* from global_settings s where s.code = :code")
     GlobalSettings findAllGlobalSettings(@Param("code") String code);
 }

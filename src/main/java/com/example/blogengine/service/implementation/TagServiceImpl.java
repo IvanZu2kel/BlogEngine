@@ -5,21 +5,18 @@ import com.example.blogengine.api.response.TagResponseAnswerQuery;
 import com.example.blogengine.api.response.TagsResponse;
 import com.example.blogengine.repository.TagRepository;
 import com.example.blogengine.service.TagService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Component
+@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
-
     private final TagRepository tagRepository;
 
-    public TagServiceImpl(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
-
-    @Override
     public TagsResponse getTags(String query) {
         List<TagResponseAnswerQuery> listTags = tagRepository.getRecentTags();
         double normParam = (double) listTags.get(0).getCount()/listTags.size();
