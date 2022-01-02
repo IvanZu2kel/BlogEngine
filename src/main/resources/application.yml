@@ -18,3 +18,5 @@ blog:
   email: ivan_zukkel@mail.ru
   copyright: Зуккель Иван
   copyrightFrom: 2021
+server:
+  port: 8081

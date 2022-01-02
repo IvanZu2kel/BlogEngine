@@ -1,6 +1,5 @@
 package com.example.blogengine.model.enumerated;
 
-import com.example.blogengine.model.enumerated.Permission;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;

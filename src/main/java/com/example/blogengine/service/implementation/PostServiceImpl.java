@@ -71,14 +71,20 @@ public class PostServiceImpl implements PostService {
     public PostResponse getPostsById(int id, Principal principal) throws UsernameNotFoundException, PostNotFoundException {
         Post post = postRepository.findPostById(id)
                 .orElseThrow(() -> new PostNotFoundException("Поста с данным id не существует"));
-        User user = userRepository.findByEmail(principal.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
-        if (!post.getUser().equals(user) || user.getIsModerator() == 0) {
+        if (principal == null) {
             post.setViewCount(post.getViewCount() + 1);
             postRepository.save(post);
+        } else {
+            User user = userRepository.findByEmail(principal.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+            if (!post.getUser().equals(user) || user.getIsModerator() == 0) {
+                post.setViewCount(post.getViewCount() + 1);
+                postRepository.save(post);
+            }
         }
         List<PostComment> commentsList = commentRepository.findPostCommentsById(id);
-        List<String> tagList = tagRepository.findTagsById(id);
+        List<String> tagList = new ArrayList<>();
+        post.getTags().forEach(tag -> tagList.add(tag.getName()));
         List<CommentResponse> commentResponseList = new ArrayList<>();
         for (PostComment c : commentsList) {
             commentResponseList.add(new CommentResponse()
@@ -95,10 +101,22 @@ public class PostServiceImpl implements PostService {
         Pageable pageable;
         pageable = PageRequest.of(offset / limit, limit);
         switch (status) {
-            case "inactive" -> postRepository.findPostsMyInactive(pageable, principal.getName());
-            case "pending" -> postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
-            case "declined" -> postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
-            case "published" -> postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
+            case "inactive" -> {
+                Page<Post> posts = postRepository.findPostsMyInactive(pageable, principal.getName());
+                return createPostResponse(posts ,(int) posts.getTotalElements());
+            }
+            case "pending" -> {
+                Page<Post> posts = postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
+                return createPostResponse(posts ,(int) posts.getTotalElements());
+            }
+            case "declined" -> {
+                Page<Post> posts = postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
+                return createPostResponse(posts ,(int) posts.getTotalElements());
+            }
+            case "published" -> {
+                Page<Post> posts = postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
+                return createPostResponse(posts ,(int) posts.getTotalElements());
+            }
         }
         return null;
     }

@@ -17,6 +17,7 @@ import java.util.List;
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
 
+    @Override
     public TagsResponse getTags(String query) {
         List<TagResponseAnswerQuery> listTags = tagRepository.getRecentTags();
         double normParam = (double) listTags.get(0).getCount()/listTags.size();

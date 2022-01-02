@@ -1,4 +1,4 @@
-package com.example.blogengine.security;
+package com.example.blogengine.config;
 
 import com.example.blogengine.model.User;
 import lombok.Data;

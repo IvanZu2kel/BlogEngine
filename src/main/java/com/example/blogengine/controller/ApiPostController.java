@@ -1,5 +1,6 @@
 package com.example.blogengine.controller;
 
+import com.example.blogengine.api.response.PostResponse;
 import com.example.blogengine.api.response.PostsResponse;
 import com.example.blogengine.exception.PostNotFoundException;
 import com.example.blogengine.exception.UsernameNotFoundException;
@@ -46,8 +47,9 @@ public class ApiPostController {
         return new ResponseEntity<>(postService.getPostsByTag(offset, limit, tag), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getPostsById(@PathVariable int id,
-                                          Principal principal) throws UsernameNotFoundException, PostNotFoundException {
+    @GetMapping("/{id}")
+    public ResponseEntity<PostResponse> getPostsById(@PathVariable int id,
+                                                     Principal principal) throws UsernameNotFoundException, PostNotFoundException {
         return new ResponseEntity<>(postService.getPostsById(id, principal), HttpStatus.OK);
     }
 

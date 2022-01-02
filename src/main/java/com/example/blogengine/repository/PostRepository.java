@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,4 +62,13 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Query("select p from Post p")
     List<Post> findPosts();
+
+    @Query("select sum(viewCount) from Post where user.id = :id group by user")
+    Optional<Integer> findViewsCountByUser(int id);
+
+    @Query("select count(p) from Post p where p.user.id = :id group by p.user")
+    Optional<Integer> findPostCountByUser(int id);
+
+    @Query("select min (time) from Post where user.id = :id group by user")
+    Optional<Date> findLatestPostByUser(int id);
 }
