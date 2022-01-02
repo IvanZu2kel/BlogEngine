@@ -2,6 +2,8 @@ package com.example.blogengine.controller;
 
 import com.example.blogengine.api.request.LoginRequest;
 import com.example.blogengine.api.request.UserRequest;
+import com.example.blogengine.api.response.AuthCaptchaResponse;
+import com.example.blogengine.api.response.LoginResponse;
 import com.example.blogengine.api.response.RegisterResponse;
 import com.example.blogengine.service.CaptchaService;
 import com.example.blogengine.service.CheckService;
@@ -27,12 +29,12 @@ public class ApiAuthController {
     private final LoginService loginService;
 
     @GetMapping("/check")
-    public ResponseEntity<?> check(Principal principal){
+    public ResponseEntity<LoginResponse> check(Principal principal){
         return new ResponseEntity<>(checkService.getCheck(principal), HttpStatus.OK);
     }
 
     @GetMapping("/captcha")
-    public ResponseEntity<?> getCaptcha() throws IOException {
+    public ResponseEntity<AuthCaptchaResponse> getCaptcha() throws IOException {
         return new ResponseEntity<>(captchaService.getCaptcha(), HttpStatus.OK);
     }
 
@@ -42,7 +44,7 @@ public class ApiAuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> postLogin(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> postLogin(@RequestBody LoginRequest loginRequest) {
         return new ResponseEntity<>(loginService.postLogin(loginRequest), HttpStatus.OK);
     }
 

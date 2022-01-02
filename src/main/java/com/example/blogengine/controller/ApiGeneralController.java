@@ -1,6 +1,6 @@
 package com.example.blogengine.controller;
 
-import com.example.blogengine.api.response.CalenderResponse;
+import com.example.blogengine.api.response.CalendarResponse;
 import com.example.blogengine.api.response.InitResponse;
 import com.example.blogengine.api.response.SettingsResponse;
 import com.example.blogengine.api.response.TagsResponse;
@@ -8,7 +8,6 @@ import com.example.blogengine.service.CalendarService;
 import com.example.blogengine.service.SettingsService;
 import com.example.blogengine.service.TagService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +36,7 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/api/calendar")
-    public CalenderResponse getCalendar(
+    public CalendarResponse getCalendar(
             @RequestParam(required = false, defaultValue = "none") String year) {
         return calendarService.getCalendar(year  );
     }
