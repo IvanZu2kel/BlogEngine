@@ -7,6 +7,7 @@ import com.example.blogengine.model.User;
 import lombok.Data;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class PostResponse {
 
     public PostResponse(List<CommentResponse> comments, Post post, List<String> tags) {
         this.id = post.getId();
-        this.timestamp =  post.getTime().getTime()/1000;
+        this.timestamp = post.getTime().toInstant().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()/1000;
         this.active = setActive(post.getIsActive());
         this.user = new UserPostResponse().setName(post.getUser().getName()).setId(post.getUser().getId());
         this.title = post.getTitle();

@@ -6,7 +6,6 @@ import com.example.blogengine.model.PostVotes;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +44,6 @@ public class PostResponseList {
         } else {
             commentCount = 0;
         }
-
         return commentCount;
     }
 
