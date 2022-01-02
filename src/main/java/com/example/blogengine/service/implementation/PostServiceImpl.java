@@ -17,10 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,18 +35,10 @@ public class PostServiceImpl implements PostService {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> postPage;
         switch (mode) {
-            case "popular":
-                postPage = postRepository.findAllPostsByCommentsDesc(pageable);
-                break;
-            case "best":
-                postPage = postRepository.findAllPostsByVotesDesc(pageable);
-                break;
-            case "early":
-                postPage = postRepository.findAllPostsByTime(pageable);
-                break;
-            default:
-                postPage = postRepository.findAllPostsByTimeDesc(pageable);
-                break;
+            case "popular" -> postPage = postRepository.findAllPostsByCommentsDesc(pageable);
+            case "best" -> postPage = postRepository.findAllPostsByVotesDesc(pageable);
+            case "early" -> postPage = postRepository.findAllPostsByTime(pageable);
+            default -> postPage = postRepository.findAllPostsByTimeDesc(pageable);
         }
         return createPostResponse(postPage, postRepository.findAllPosts().size());
     }
@@ -81,7 +71,7 @@ public class PostServiceImpl implements PostService {
         for (PostComment c : commentsList) {
             commentResponseList.add(new CommentResponse()
                     .setId(c.getId())
-                    .setTimestamp(c.getTime().getTime()/1000)
+                    .setTimestamp(c.getTime().getTime() / 1000)
                     .setText(c.getText())
                     .setUser(new UserPostResponse().setId(c.getUser().getId()).setName(c.getUser().getName()))
             );
@@ -120,19 +110,19 @@ public class PostServiceImpl implements PostService {
         pageable = PageRequest.of(offset / limit, limit);
 
         switch (status) {
-            case "inactive": {
+            case "inactive" -> {
                 Page<Post> pageMy = postRepository.findPostsMyInactive(pageable, principal.getName());
                 return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
             }
-            case "pending": {
+            case "pending" -> {
                 Page<Post> pageMy = postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
                 return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
             }
-            case "declined": {
+            case "declined" -> {
                 Page<Post> pageMy = postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
                 return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
             }
-            case "published": {
+            case "published" -> {
                 Page<Post> pageMy = postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
                 return ResponseEntity.ok(createPostResponse(pageMy, (int) pageMy.getTotalElements()));
             }

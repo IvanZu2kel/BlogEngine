@@ -15,5 +15,6 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
             "p.`time` < NOW() group by tp.tag_id order by count desc", nativeQuery = true)
     List<TagResponseAnswerQuery> getRecentTags();
 
+    @Query("select t from Tag t left join Tag2Post t2p on t.id = t2p.tag_id where t2p.post_id = :id ")
     List<String> findTagsById(int id);
 }
