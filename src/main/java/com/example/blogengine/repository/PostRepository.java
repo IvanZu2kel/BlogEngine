@@ -62,5 +62,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
     Page<Post> findPostsMyIsActive(@Param("status") String status, @Param("email") String email, Pageable pageable);
 
+    @Query("select p from Post p")
     List<Post> findPosts();
 }
