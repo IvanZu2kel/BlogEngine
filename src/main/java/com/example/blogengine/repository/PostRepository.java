@@ -1,6 +1,7 @@
 package com.example.blogengine.repository;
 
 import com.example.blogengine.model.Post;
+import com.example.blogengine.model.enumerated.ModerationStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -71,4 +72,15 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Query("select min (time) from Post where user.id = :id group by user")
     Optional<Date> findLatestPostByUser(int id);
+
+    @Query("select p from Post p " +
+            "left join User u on p.user.id = u.id " +
+            "where p.isActive = 1 and p.moderationStatus = :status and p.time <= current_timestamp " +
+            "order by p.time desc ")
+    Page<Post> findPostsByModerate(ModerationStatus status, Pageable pageable);
+
+    @Query("select p from Post p " +
+            "where p.moderator.id = :id and p.isActive = 1 and p.moderationStatus = :status and p.time <= current_time " +
+            "order by p.time desc ")
+    Page<Post> findPostsMyModerate(ModerationStatus status, int id, Pageable pageable);
 }

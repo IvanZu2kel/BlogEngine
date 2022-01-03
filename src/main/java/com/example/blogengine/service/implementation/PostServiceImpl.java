@@ -1,25 +1,23 @@
 package com.example.blogengine.service.implementation;
 
+import com.example.blogengine.api.request.PostRequest;
 import com.example.blogengine.api.response.*;
 import com.example.blogengine.exception.PostNotFoundException;
 import com.example.blogengine.exception.UsernameNotFoundException;
-import com.example.blogengine.model.Post;
-import com.example.blogengine.model.PostComment;
-import com.example.blogengine.model.PostVotes;
-import com.example.blogengine.model.User;
+import com.example.blogengine.model.*;
+import com.example.blogengine.model.enumerated.ModerationStatus;
 import com.example.blogengine.repository.*;
 import com.example.blogengine.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,9 +27,9 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final TagRepository tagRepository;
     private final UserRepository userRepository;
     private final PostVotesRepository postVotesRepository;
+    private final Tag2PostRepository tag2PostRepository;
 
     public PostsResponse getPosts(int offset, int limit, String mode) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
@@ -103,22 +101,82 @@ public class PostServiceImpl implements PostService {
         switch (status) {
             case "inactive" -> {
                 Page<Post> posts = postRepository.findPostsMyInactive(pageable, principal.getName());
-                return createPostResponse(posts ,(int) posts.getTotalElements());
+                return createPostResponse(posts, (int) posts.getTotalElements());
             }
             case "pending" -> {
                 Page<Post> posts = postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
-                return createPostResponse(posts ,(int) posts.getTotalElements());
+                return createPostResponse(posts, (int) posts.getTotalElements());
             }
             case "declined" -> {
                 Page<Post> posts = postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
-                return createPostResponse(posts ,(int) posts.getTotalElements());
+                return createPostResponse(posts, (int) posts.getTotalElements());
             }
             case "published" -> {
                 Page<Post> posts = postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
-                return createPostResponse(posts ,(int) posts.getTotalElements());
+                return createPostResponse(posts, (int) posts.getTotalElements());
             }
         }
         return null;
+    }
+
+    public PostsResponse getModeratePost(int offset, int limit, String status, Principal principal) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        User moder = userRepository.findByEmail(principal.getName()).orElseThrow();
+        switch (status) {
+            case "new" -> {
+                Page<Post> posts = postRepository.findPostsByModerate(ModerationStatus.NEW, pageable);
+                return createPostResponse(posts, (int) posts.getTotalElements());
+            }
+            case "declined" -> {
+                Page<Post> posts = postRepository.findPostsMyModerate(ModerationStatus.DECLINED, moder.getId(), pageable);
+                return createPostResponse(posts, (int) posts.getTotalElements());
+            }
+            case "accepted" -> {
+                Page<Post> posts = postRepository.findPostsMyModerate(ModerationStatus.ACCEPTED, moder.getId(), pageable);
+                return createPostResponse(posts, (int) posts.getTotalElements());
+            }
+        }
+        return null;
+    }
+
+    public ResultResponse createPost(PostRequest postRequest, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow();
+        if (postRequest.getTitle().length() < 3 || postRequest.getText().length() < 50) {
+            return new ResultResponse()
+                    .setResult(false)
+                    .setErrors(new ErrorResponse()
+                            .setTitle("Заголовок не установлен")
+                            .setText("Текст публикации слишком короткий"));
+        }
+
+        Date date = setDatePost(postRequest.getTimestamp());
+        Post post = new Post()
+                .setText(postRequest.getText())
+                .setTitle(postRequest.getTitle())
+                .setIsActive(postRequest.getActive())
+                .setTime(date)
+                .setUser(user)
+                .setModerationStatus(ModerationStatus.NEW);
+        List<String> tagList = new ArrayList<>(postRequest.getTags());
+        for (String t : tagList) {
+            Tag tag = new Tag()
+                    .setName(t);
+            Tag2Post tag2Post = new Tag2Post()
+                    .setPost_id(post.getId())
+                    .setTag_id(tag.getId());
+            tag2PostRepository.save(tag2Post);
+        }
+        postRepository.save(post);
+        return new ResultResponse().setResult(true);
+    }
+
+    private Date setDatePost(long timestamp) {
+        Date dateNow = new Date();
+        Date datePost = new Date(timestamp);
+        if (datePost.before(dateNow)) {
+            datePost = dateNow;
+        }
+        return datePost;
     }
 
     private PostsResponse createPostResponse(Page<Post> pageTags, int size) {

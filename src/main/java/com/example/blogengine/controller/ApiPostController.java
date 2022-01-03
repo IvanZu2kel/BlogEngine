@@ -1,7 +1,9 @@
 package com.example.blogengine.controller;
 
+import com.example.blogengine.api.request.PostRequest;
 import com.example.blogengine.api.response.PostResponse;
 import com.example.blogengine.api.response.PostsResponse;
+import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.exception.PostNotFoundException;
 import com.example.blogengine.exception.UsernameNotFoundException;
 import com.example.blogengine.service.PostService;
@@ -60,5 +62,21 @@ public class ApiPostController {
                                                     @RequestParam(required = false, defaultValue = "") String status,
                                                     Principal principal) {
         return new ResponseEntity<>(postService.getPostsMy(offset, limit, status, principal), HttpStatus.OK);
+    }
+
+    @PostMapping("")
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResultResponse> postPost(@RequestBody PostRequest postRequest,
+                                                   Principal principal) {
+        return new ResponseEntity<>(postService.createPost(postRequest, principal), HttpStatus.OK);
+    }
+
+    @GetMapping("/moderation")
+    @PreAuthorize("hasAuthority('user:moderate')")
+    public ResponseEntity<PostsResponse> getModeratePost(@RequestParam(required = false, defaultValue = "0") int offset,
+                                                    @RequestParam(required = false, defaultValue = "10") int limit,
+                                                    @RequestParam(required = false, defaultValue = "") String status,
+                                                    Principal principal) {
+        return new ResponseEntity<>(postService.getModeratePost(offset, limit, status, principal), HttpStatus.OK);
     }
 }
