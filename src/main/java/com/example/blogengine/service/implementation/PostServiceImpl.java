@@ -3,6 +3,7 @@ package com.example.blogengine.service.implementation;
 import com.example.blogengine.api.request.ModeratorRequest;
 import com.example.blogengine.api.request.PostRequest;
 import com.example.blogengine.api.response.ErrorResponse;
+import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.api.response.posts.*;
 import com.example.blogengine.exception.AuthorAndUserNoEqualsException;
 import com.example.blogengine.exception.PostNotFoundException;

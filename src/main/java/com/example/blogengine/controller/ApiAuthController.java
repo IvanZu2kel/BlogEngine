@@ -2,6 +2,7 @@ package com.example.blogengine.controller;
 
 import com.example.blogengine.api.request.LoginRequest;
 import com.example.blogengine.api.request.UserRequest;
+import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.api.response.security.AuthCaptchaResponse;
 import com.example.blogengine.api.response.security.LoginResponse;
 import com.example.blogengine.api.response.security.RegisterResponse;
@@ -9,6 +10,7 @@ import com.example.blogengine.service.CaptchaService;
 import com.example.blogengine.service.CheckService;
 import com.example.blogengine.service.LoginService;
 import com.example.blogengine.service.RegisterService;
+import com.mailjet.client.errors.MailjetException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,4 +56,11 @@ public class ApiAuthController {
         SecurityContextHolder.clearContext();
         return new ResponseEntity<>(new RegisterResponse(true), HttpStatus.OK);
     }
+
+    @PostMapping("/restore")
+    public ResponseEntity<ResultResponse> postRestore(@RequestParam String email) throws MailjetException {
+        return new ResponseEntity<>(loginService.postRestore(email), HttpStatus.OK);
+    }
+
+
 }

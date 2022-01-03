@@ -1,4 +1,4 @@
-package com.example.blogengine.api.response.posts;
+package com.example.blogengine.api.response;
 
 import com.example.blogengine.api.response.ErrorResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;

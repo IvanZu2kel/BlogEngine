@@ -3,7 +3,7 @@ package com.example.blogengine.controller;
 import com.example.blogengine.api.request.ModeratorRequest;
 import com.example.blogengine.api.request.ProfileImageRequest;
 import com.example.blogengine.api.request.ProfileRequest;
-import com.example.blogengine.api.response.posts.ResultResponse;
+import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.api.response.profile.ProfileResponse;
 import com.example.blogengine.api.response.security.InitResponse;
 import com.example.blogengine.api.response.settings.CalendarResponse;
