@@ -1,10 +1,13 @@
 package com.example.blogengine.controller;
 
+import com.example.blogengine.api.request.ModeratorRequest;
 import com.example.blogengine.api.request.PostRequest;
 import com.example.blogengine.api.response.posts.PostResponse;
 import com.example.blogengine.api.response.posts.PostsResponse;
 import com.example.blogengine.api.response.posts.ResultResponse;
+import com.example.blogengine.exception.AuthorAndUserNoEqualsException;
 import com.example.blogengine.exception.PostNotFoundException;
+import com.example.blogengine.exception.StatusNotFoundException;
 import com.example.blogengine.exception.UsernameNotFoundException;
 import com.example.blogengine.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,13 @@ public class ApiPostController {
                                                   @RequestParam(defaultValue = "10") int limit,
                                                   @RequestParam(defaultValue = "") String mode) {
         return new ResponseEntity<>(postService.getPosts(offset, limit, mode), HttpStatus.OK);
+    }
+
+    @PostMapping("")
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResultResponse> postPost(@RequestBody PostRequest postRequest,
+                                                   Principal principal) {
+        return new ResponseEntity<>(postService.createPost(postRequest, principal), HttpStatus.OK);
     }
 
     @GetMapping("/search")
@@ -55,20 +65,21 @@ public class ApiPostController {
         return new ResponseEntity<>(postService.getPostsById(id, principal), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResultResponse> putPostsById(@PathVariable int id,
+                                                     @RequestBody PostRequest postRequest,
+                                                     Principal principal) throws UsernameNotFoundException, PostNotFoundException, AuthorAndUserNoEqualsException {
+        return new ResponseEntity<>(postService.putPostsById(id, postRequest, principal), HttpStatus.OK);
+    }
+
     @GetMapping("/my")
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<PostsResponse> getPostsMy(@RequestParam(required = false, defaultValue = "0") int offset,
                                                     @RequestParam(required = false, defaultValue = "10") int limit,
                                                     @RequestParam(required = false, defaultValue = "") String status,
-                                                    Principal principal) {
+                                                    Principal principal) throws StatusNotFoundException {
         return new ResponseEntity<>(postService.getPostsMy(offset, limit, status, principal), HttpStatus.OK);
-    }
-
-    @PostMapping("")
-    @PreAuthorize("hasAuthority('user:write')")
-    public ResponseEntity<ResultResponse> postPost(@RequestBody PostRequest postRequest,
-                                                   Principal principal) {
-        return new ResponseEntity<>(postService.createPost(postRequest, principal), HttpStatus.OK);
     }
 
     @GetMapping("/moderation")
@@ -76,7 +87,7 @@ public class ApiPostController {
     public ResponseEntity<PostsResponse> getModeratePost(@RequestParam(required = false, defaultValue = "0") int offset,
                                                     @RequestParam(required = false, defaultValue = "10") int limit,
                                                     @RequestParam(required = false, defaultValue = "") String status,
-                                                    Principal principal) {
+                                                    Principal principal) throws StatusNotFoundException {
         return new ResponseEntity<>(postService.getModeratePost(offset, limit, status, principal), HttpStatus.OK);
     }
 }

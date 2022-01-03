@@ -1,8 +1,12 @@
 package com.example.blogengine.service.implementation;
 
+import com.example.blogengine.api.request.ModeratorRequest;
 import com.example.blogengine.api.request.PostRequest;
+import com.example.blogengine.api.response.ErrorResponse;
 import com.example.blogengine.api.response.posts.*;
+import com.example.blogengine.exception.AuthorAndUserNoEqualsException;
 import com.example.blogengine.exception.PostNotFoundException;
+import com.example.blogengine.exception.StatusNotFoundException;
 import com.example.blogengine.exception.UsernameNotFoundException;
 import com.example.blogengine.model.*;
 import com.example.blogengine.model.enumerated.ModerationStatus;
@@ -16,10 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Principal;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 @Component
@@ -83,19 +84,19 @@ public class PostServiceImpl implements PostService {
         List<PostComment> commentsList = commentRepository.findPostCommentsById(id);
         List<String> tagList = new ArrayList<>();
         post.getTags().forEach(tag -> tagList.add(tag.getName()));
-        List<CommentResponse> commentResponseList = new ArrayList<>();
+        List<PostCommentResponse> postCommentResponseList = new ArrayList<>();
         for (PostComment c : commentsList) {
-            commentResponseList.add(new CommentResponse()
+            postCommentResponseList.add(new PostCommentResponse()
                     .setId(c.getId())
                     .setTimestamp(c.getTime().getTime() / 1000)
                     .setText(c.getText())
                     .setUser(new UserPostResponse().setId(c.getUser().getId()).setName(c.getUser().getName()))
             );
         }
-        return getPostResponse(commentResponseList, post, tagList);
+        return getPostResponse(postCommentResponseList, post, tagList);
     }
 
-    public PostsResponse getPostsMy(int offset, int limit, String status, Principal principal) {
+    public PostsResponse getPostsMy(int offset, int limit, String status, Principal principal) throws StatusNotFoundException {
         Pageable pageable;
         pageable = PageRequest.of(offset / limit, limit);
         switch (status) {
@@ -116,10 +117,10 @@ public class PostServiceImpl implements PostService {
                 return createPostResponse(posts, (int) posts.getTotalElements());
             }
         }
-        return null;
+        throw new StatusNotFoundException("статус не найден");
     }
 
-    public PostsResponse getModeratePost(int offset, int limit, String status, Principal principal) {
+    public PostsResponse getModeratePost(int offset, int limit, String status, Principal principal) throws StatusNotFoundException {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         User moder = userRepository.findByEmail(principal.getName()).orElseThrow();
         switch (status) {
@@ -136,18 +137,12 @@ public class PostServiceImpl implements PostService {
                 return createPostResponse(posts, (int) posts.getTotalElements());
             }
         }
-        return null;
+        throw new StatusNotFoundException("статус не найден");
     }
 
     public ResultResponse createPost(PostRequest postRequest, Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
-        if (postRequest.getTitle().length() < 3 || postRequest.getText().length() < 50) {
-            return new ResultResponse()
-                    .setResult(false)
-                    .setErrors(new ErrorResponse()
-                            .setTitle("Заголовок не установлен")
-                            .setText("Текст публикации слишком короткий"));
-        }
+        getErrorResponseForResultResponseIfLengthTitleOrTextNotFit(postRequest.getTitle().length(), postRequest.getText().length());
 
         Date date = setDatePost(postRequest.getTimestamp());
         Post post = new Post()
@@ -157,7 +152,53 @@ public class PostServiceImpl implements PostService {
                 .setTime(date)
                 .setUser(user)
                 .setModerationStatus(ModerationStatus.NEW);
-        List<String> tagList = new ArrayList<>(postRequest.getTags());
+        setTagsForPost(post, postRequest.getTags());
+        postRepository.save(post);
+        return new ResultResponse().setResult(true);
+    }
+
+    public ResultResponse putPostsById(int id, PostRequest postRequest, Principal principal) throws PostNotFoundException, AuthorAndUserNoEqualsException {
+        getErrorResponseForResultResponseIfLengthTitleOrTextNotFit(postRequest.getTitle().length(), postRequest.getText().length());
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow();
+        Post post = postRepository.findPostById(id).orElseThrow(() -> new PostNotFoundException("Поста с данным id не существует"));
+        if (user.getId() == post.getUser().getId()) {
+            Date date = setDatePost(postRequest.getTimestamp());
+            post
+                    .setTime(date)
+                    .setIsActive(postRequest.getActive())
+                    .setTitle(postRequest.getTitle())
+                    .setText(postRequest.getText());
+            setTagsForPost(post, postRequest.getTags());
+            postRepository.save(post);
+        } else throw new AuthorAndUserNoEqualsException("пользователь не может изменить чужую статью");
+        return new ResultResponse().setResult(true);
+    }
+
+    public ResultResponse postModeratePost(ModeratorRequest moderatorRequest, Principal principal) throws PostNotFoundException {
+        User moderator = userRepository.findByEmail(principal.getName()).orElseThrow();
+        Post post = postRepository.findPostById(moderatorRequest.getPostId())
+                .orElseThrow(() -> new PostNotFoundException("Поста с данным id не существует"));
+        switch (moderatorRequest.getDecision()) {
+            case "accept" -> post.setModerationStatus(ModerationStatus.ACCEPTED);
+            case "decline" -> post.setModerationStatus(ModerationStatus.DECLINED);
+        }
+        post.setModerator(moderator);
+        postRepository.save(post);
+        return new ResultResponse().setResult(true);
+    }
+
+    private void getErrorResponseForResultResponseIfLengthTitleOrTextNotFit(int titleLength, int textLength) {
+        if (titleLength < 3 || textLength < 50) {
+            new ResultResponse()
+                    .setResult(false)
+                    .setErrors(new ErrorResponse()
+                            .setTitle("Заголовок не установлен")
+                            .setText("Текст публикации слишком короткий"));
+        }
+    }
+
+    private void setTagsForPost(Post post, List<String> tags) {
+        List<String> tagList = new ArrayList<>(tags);
         for (String t : tagList) {
             Tag tag = new Tag()
                     .setName(t);
@@ -166,8 +207,6 @@ public class PostServiceImpl implements PostService {
                     .setTag_id(tag.getId());
             tag2PostRepository.save(tag2Post);
         }
-        postRepository.save(post);
-        return new ResultResponse().setResult(true);
     }
 
     private Date setDatePost(long timestamp) {
@@ -204,7 +243,7 @@ public class PostServiceImpl implements PostService {
                 .setCommentCount(setCommentCount(post));
     }
 
-    private PostResponse getPostResponse(List<CommentResponse> commentResponseList, Post post, List<String> tagList) {
+    private PostResponse getPostResponse(List<PostCommentResponse> postCommentResponseList, Post post, List<String> tagList) {
         List<PostVotes> likeAndDislike = postVotesRepository.getAllByPostId(post.getId());
         return new PostResponse()
                 .setId(post.getId())
@@ -214,7 +253,7 @@ public class PostServiceImpl implements PostService {
                 .setTitle(post.getTitle())
                 .setText(post.getText())
                 .setTags(tagList)
-                .setComments(commentResponseList)
+                .setComments(postCommentResponseList)
                 .setDislikeCount(getDislikeCount(likeAndDislike))
                 .setLikeCount(getLikeCount(likeAndDislike))
                 .setViewCount(post.getViewCount());

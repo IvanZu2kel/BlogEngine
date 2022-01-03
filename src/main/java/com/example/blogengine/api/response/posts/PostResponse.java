@@ -17,6 +17,6 @@ public class PostResponse {
     private long likeCount;
     private long dislikeCount;
     private long viewCount;
-    private List<CommentResponse> comments;
+    private List<PostCommentResponse> comments;
     private List<String> tags;
 }

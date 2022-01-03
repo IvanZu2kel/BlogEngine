@@ -50,7 +50,7 @@ public class ApiAuthController {
 
     @GetMapping("/logout")
     @PreAuthorize("hasAuthority('user:write')")
-    public ResponseEntity getLogout() {
+    public ResponseEntity<RegisterResponse> getLogout() {
         SecurityContextHolder.clearContext();
         return new ResponseEntity<>(new RegisterResponse(true), HttpStatus.OK);
     }

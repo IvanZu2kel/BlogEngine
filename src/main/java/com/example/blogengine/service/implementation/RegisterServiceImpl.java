@@ -36,7 +36,7 @@ public class RegisterServiceImpl implements RegisterService {
             result = false;
         }
         if (!(userRequest.getName().matches("[\\w]+"))) {
-            registerErrorResponse.setName("Имя указано неверно, Имя может содержать буквы латинского алфавита, цифры или знак подчеркивания");
+            registerErrorResponse.setName("Имя указано неверно. Имя может содержать буквы латинского алфавита, цифры или знак подчеркивания");
             result = false;
         }
         if (!result) {

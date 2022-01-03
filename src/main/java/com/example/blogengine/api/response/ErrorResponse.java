@@ -1,4 +1,4 @@
-package com.example.blogengine.api.response.posts;
+package com.example.blogengine.api.response;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
