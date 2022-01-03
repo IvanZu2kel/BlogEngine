@@ -1,7 +1,7 @@
 package com.example.blogengine.service.implementation;
 
 import com.example.blogengine.api.request.PostRequest;
-import com.example.blogengine.api.response.*;
+import com.example.blogengine.api.response.posts.*;
 import com.example.blogengine.exception.PostNotFoundException;
 import com.example.blogengine.exception.UsernameNotFoundException;
 import com.example.blogengine.model.*;

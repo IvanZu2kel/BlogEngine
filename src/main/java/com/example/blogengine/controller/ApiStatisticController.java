@@ -1,6 +1,6 @@
 package com.example.blogengine.controller;
 
-import com.example.blogengine.api.response.StatisticResponse;
+import com.example.blogengine.api.response.settings.StatisticResponse;
 import com.example.blogengine.service.StatisticService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

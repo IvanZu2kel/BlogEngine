@@ -2,9 +2,9 @@ package com.example.blogengine.controller;
 
 import com.example.blogengine.api.request.LoginRequest;
 import com.example.blogengine.api.request.UserRequest;
-import com.example.blogengine.api.response.AuthCaptchaResponse;
-import com.example.blogengine.api.response.LoginResponse;
-import com.example.blogengine.api.response.RegisterResponse;
+import com.example.blogengine.api.response.security.AuthCaptchaResponse;
+import com.example.blogengine.api.response.security.LoginResponse;
+import com.example.blogengine.api.response.security.RegisterResponse;
 import com.example.blogengine.service.CaptchaService;
 import com.example.blogengine.service.CheckService;
 import com.example.blogengine.service.LoginService;

@@ -1,13 +1,12 @@
 package com.example.blogengine.service.implementation;
 
-import com.example.blogengine.api.response.TagResponse;
-import com.example.blogengine.api.response.TagResponseAnswerQuery;
-import com.example.blogengine.api.response.TagsResponse;
+import com.example.blogengine.api.response.tags.TagResponse;
+import com.example.blogengine.api.response.tags.TagResponseAnswerQuery;
+import com.example.blogengine.api.response.tags.TagsResponse;
 import com.example.blogengine.repository.TagRepository;
 import com.example.blogengine.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;

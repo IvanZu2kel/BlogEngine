@@ -1,6 +1,6 @@
 package com.example.blogengine.service.implementation;
 
-import com.example.blogengine.api.response.SettingsResponse;
+import com.example.blogengine.api.response.settings.SettingsResponse;
 import com.example.blogengine.model.GlobalSettings;
 import com.example.blogengine.repository.GlobalSettingsRepository;
 import com.example.blogengine.service.SettingsService;

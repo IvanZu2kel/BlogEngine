@@ -1,9 +1,9 @@
 package com.example.blogengine.service;
 
 import com.example.blogengine.api.request.PostRequest;
-import com.example.blogengine.api.response.PostResponse;
-import com.example.blogengine.api.response.PostsResponse;
-import com.example.blogengine.api.response.ResultResponse;
+import com.example.blogengine.api.response.posts.PostResponse;
+import com.example.blogengine.api.response.posts.PostsResponse;
+import com.example.blogengine.api.response.posts.ResultResponse;
 import com.example.blogengine.exception.PostNotFoundException;
 import com.example.blogengine.exception.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

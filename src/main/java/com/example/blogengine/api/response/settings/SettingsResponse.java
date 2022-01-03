@@ -1,4 +1,4 @@
-package com.example.blogengine.api.response;
+package com.example.blogengine.api.response.settings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

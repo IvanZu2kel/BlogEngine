@@ -1,6 +1,5 @@
-package com.example.blogengine.api.response;
+package com.example.blogengine.api.response.posts;
 
-import com.example.blogengine.model.PostComment;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

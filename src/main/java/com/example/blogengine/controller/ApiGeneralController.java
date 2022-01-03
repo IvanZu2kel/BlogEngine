@@ -1,9 +1,9 @@
 package com.example.blogengine.controller;
 
-import com.example.blogengine.api.response.CalendarResponse;
-import com.example.blogengine.api.response.InitResponse;
-import com.example.blogengine.api.response.SettingsResponse;
-import com.example.blogengine.api.response.TagsResponse;
+import com.example.blogengine.api.response.settings.CalendarResponse;
+import com.example.blogengine.api.response.security.InitResponse;
+import com.example.blogengine.api.response.settings.SettingsResponse;
+import com.example.blogengine.api.response.tags.TagsResponse;
 import com.example.blogengine.service.CalendarService;
 import com.example.blogengine.service.SettingsService;
 import com.example.blogengine.service.TagService;

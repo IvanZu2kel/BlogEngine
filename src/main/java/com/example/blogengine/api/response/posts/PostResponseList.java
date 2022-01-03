@@ -1,29 +1,24 @@
-package com.example.blogengine.api.response;
+package com.example.blogengine.api.response.posts;
 
-import com.example.blogengine.model.Post;
 import com.example.blogengine.model.PostComment;
-import com.example.blogengine.model.PostVotes;
-import com.example.blogengine.model.User;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.LinkedList;
 import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class PostResponse {
+public class PostResponseList {
     private long id;
     private long timestamp;
-    private boolean active;
     private UserPostResponse user;
     private String title;
-    private String text;
+    private String announce;
     private long likeCount;
     private long dislikeCount;
+    private long commentCount;
     private long viewCount;
-    private List<CommentResponse> comments;
+    private boolean active;
+    private PostComment comments;
     private List<String> tags;
 }

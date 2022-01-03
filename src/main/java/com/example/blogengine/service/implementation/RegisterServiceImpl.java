@@ -1,19 +1,17 @@
 package com.example.blogengine.service.implementation;
 
 import com.example.blogengine.api.request.UserRequest;
-import com.example.blogengine.api.response.RegisterErrorResponse;
-import com.example.blogengine.api.response.RegisterResponse;
+import com.example.blogengine.api.response.security.RegisterErrorResponse;
+import com.example.blogengine.api.response.security.RegisterResponse;
 import com.example.blogengine.model.User;
 import com.example.blogengine.repository.CaptchaRepository;
 import com.example.blogengine.repository.UserRepository;
 import com.example.blogengine.service.RegisterService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 
 @Controller

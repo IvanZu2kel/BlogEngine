@@ -1,18 +1,15 @@
 package com.example.blogengine.service.implementation;
 
-import com.example.blogengine.api.response.AuthCaptchaResponse;
+import com.example.blogengine.api.response.security.AuthCaptchaResponse;
 import com.example.blogengine.repository.CaptchaRepository;
 import com.example.blogengine.service.CaptchaService;
 import com.github.cage.Cage;
 import com.github.cage.GCage;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
-import javax.transaction.Transactional;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;

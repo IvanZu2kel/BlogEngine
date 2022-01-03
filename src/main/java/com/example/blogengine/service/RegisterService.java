@@ -1,7 +1,7 @@
 package com.example.blogengine.service;
 
 import com.example.blogengine.api.request.UserRequest;
-import com.example.blogengine.api.response.RegisterResponse;
+import com.example.blogengine.api.response.security.RegisterResponse;
 import org.springframework.stereotype.Service;
 
 @Service

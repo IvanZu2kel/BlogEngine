@@ -1,6 +1,6 @@
 package com.example.blogengine.service.implementation;
 
-import com.example.blogengine.api.response.StatisticResponse;
+import com.example.blogengine.api.response.settings.StatisticResponse;
 import com.example.blogengine.model.User;
 import com.example.blogengine.repository.PostRepository;
 import com.example.blogengine.repository.PostVotesRepository;

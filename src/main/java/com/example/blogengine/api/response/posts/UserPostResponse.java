@@ -1,4 +1,4 @@
-package com.example.blogengine.api.response;
+package com.example.blogengine.api.response.posts;
 
 import com.example.blogengine.model.Post;
 import com.example.blogengine.model.User;

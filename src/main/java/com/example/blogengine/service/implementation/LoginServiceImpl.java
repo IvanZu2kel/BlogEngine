@@ -1,8 +1,8 @@
 package com.example.blogengine.service.implementation;
 
 import com.example.blogengine.api.request.LoginRequest;
-import com.example.blogengine.api.response.LoginResponse;
-import com.example.blogengine.api.response.UserLoginResponse;
+import com.example.blogengine.api.response.security.LoginResponse;
+import com.example.blogengine.api.response.security.UserLoginResponse;
 import com.example.blogengine.model.User;
 import com.example.blogengine.repository.PostRepository;
 import com.example.blogengine.repository.UserRepository;

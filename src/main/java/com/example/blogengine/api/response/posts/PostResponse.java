@@ -1,6 +1,5 @@
-package com.example.blogengine.api.response;
+package com.example.blogengine.api.response.posts;
 
-import com.example.blogengine.model.PostComment;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -8,17 +7,16 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class PostResponseList {
+public class PostResponse {
     private long id;
     private long timestamp;
+    private boolean active;
     private UserPostResponse user;
     private String title;
-    private String announce;
+    private String text;
     private long likeCount;
     private long dislikeCount;
-    private long commentCount;
     private long viewCount;
-    private boolean active;
-    private PostComment comments;
+    private List<CommentResponse> comments;
     private List<String> tags;
 }

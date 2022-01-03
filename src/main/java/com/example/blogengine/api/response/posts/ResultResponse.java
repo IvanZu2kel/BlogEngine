@@ -1,5 +1,6 @@
-package com.example.blogengine.api.response;
+package com.example.blogengine.api.response.posts;
 
+import com.example.blogengine.api.response.posts.ErrorResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.Accessors;

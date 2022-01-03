@@ -1,6 +1,6 @@
 package com.example.blogengine.repository;
 
-import com.example.blogengine.api.response.TagResponseAnswerQuery;
+import com.example.blogengine.api.response.tags.TagResponseAnswerQuery;
 import com.example.blogengine.model.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

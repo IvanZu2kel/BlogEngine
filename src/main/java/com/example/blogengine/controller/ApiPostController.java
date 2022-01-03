@@ -1,9 +1,9 @@
 package com.example.blogengine.controller;
 
 import com.example.blogengine.api.request.PostRequest;
-import com.example.blogengine.api.response.PostResponse;
-import com.example.blogengine.api.response.PostsResponse;
-import com.example.blogengine.api.response.ResultResponse;
+import com.example.blogengine.api.response.posts.PostResponse;
+import com.example.blogengine.api.response.posts.PostsResponse;
+import com.example.blogengine.api.response.posts.ResultResponse;
 import com.example.blogengine.exception.PostNotFoundException;
 import com.example.blogengine.exception.UsernameNotFoundException;
 import com.example.blogengine.service.PostService;
