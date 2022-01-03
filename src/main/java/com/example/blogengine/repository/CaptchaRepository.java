@@ -22,4 +22,6 @@ public interface CaptchaRepository extends JpaRepository<CaptchaCodes, Integer> 
             nativeQuery = true)
     String checkCaptcha(@Param("secret_captcha") String secret_captcha);
 
+    @Query("select c from CaptchaCodes c where c.secretCode = :secret")
+    CaptchaCodes findBySecretCode(String secret);
 }

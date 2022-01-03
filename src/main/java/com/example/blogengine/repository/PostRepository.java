@@ -83,4 +83,13 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "where p.moderator.id = :id and p.isActive = 1 and p.moderationStatus = :status and p.time <= current_time " +
             "order by p.time desc ")
     Page<Post> findPostsMyModerate(ModerationStatus status, int id, Pageable pageable);
+
+    @Query("select sum(viewCount) from Post")
+    Optional<Integer> findViewsCount();
+
+    @Query("select count(p) from Post p")
+    Optional<Integer> findPostCount();
+
+    @Query("SELECT MIN(time) FROM Post ")
+    Optional<Date> findLatestPost();
 }

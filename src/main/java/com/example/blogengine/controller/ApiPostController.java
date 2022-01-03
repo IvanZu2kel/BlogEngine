@@ -1,6 +1,7 @@
 package com.example.blogengine.controller;
 
 import com.example.blogengine.api.request.PostRequest;
+import com.example.blogengine.api.request.PostVoteRequest;
 import com.example.blogengine.api.response.posts.PostResponse;
 import com.example.blogengine.api.response.posts.PostsResponse;
 import com.example.blogengine.api.response.ResultResponse;
@@ -89,4 +90,19 @@ public class ApiPostController {
                                                     Principal principal) throws StatusNotFoundException {
         return new ResponseEntity<>(postService.getModeratePost(offset, limit, status, principal), HttpStatus.OK);
     }
+
+    @PostMapping("/like")
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResultResponse> postLike(@RequestBody PostVoteRequest postVoteRequest,
+                                                   Principal principal) {
+        return new ResponseEntity<>(postService.postLike(postVoteRequest, principal), HttpStatus.OK);
+    }
+
+    @PostMapping("/dislike")
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResultResponse> postDislike(@RequestBody PostVoteRequest postVoteRequest,
+                                                      Principal principal) {
+        return new ResponseEntity<>(postService.postDislike(postVoteRequest, principal), HttpStatus.OK);
+    }
+
 }

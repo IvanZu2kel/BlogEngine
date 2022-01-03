@@ -3,6 +3,7 @@ package com.example.blogengine.controller;
 import com.example.blogengine.api.request.ModeratorRequest;
 import com.example.blogengine.api.request.ProfileImageRequest;
 import com.example.blogengine.api.request.ProfileRequest;
+import com.example.blogengine.api.request.SettingsRequest;
 import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.api.response.profile.ProfileResponse;
 import com.example.blogengine.api.response.security.InitResponse;
@@ -86,6 +87,12 @@ public class ApiGeneralController {
     public ResponseEntity<ProfileResponse> postProfile(@RequestBody ProfileRequest profileRequest,
                                                       Principal principal) throws StatusNotFoundException, PostNotFoundException {
         return new ResponseEntity<>(profileService.postProfile(profileRequest, principal), HttpStatus.OK);
+    }
+
+    @PutMapping("/settings")
+    @PreAuthorize("hasAuthority('user:moderate')")
+    public void putSettings(@RequestBody SettingsRequest settingsRequest) {
+        settingsService.putGlobalSettings(settingsRequest);
     }
 
     @Bean

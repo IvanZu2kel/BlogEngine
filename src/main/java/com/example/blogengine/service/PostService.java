@@ -2,6 +2,7 @@ package com.example.blogengine.service;
 
 import com.example.blogengine.api.request.ModeratorRequest;
 import com.example.blogengine.api.request.PostRequest;
+import com.example.blogengine.api.request.PostVoteRequest;
 import com.example.blogengine.api.response.posts.PostResponse;
 import com.example.blogengine.api.response.posts.PostsResponse;
 import com.example.blogengine.api.response.ResultResponse;
@@ -34,4 +35,8 @@ public interface PostService {
     ResultResponse putPostsById(int id, PostRequest postRequest, Principal principal) throws PostNotFoundException, AuthorAndUserNoEqualsException;
 
     ResultResponse postModeratePost(ModeratorRequest moderatorRequest, Principal principal) throws PostNotFoundException;
+
+    ResultResponse postLike(PostVoteRequest postVoteRequest, Principal principal);
+
+    ResultResponse postDislike(PostVoteRequest postVoteRequest, Principal principal);
 }

@@ -2,6 +2,7 @@ package com.example.blogengine.service.implementation;
 
 import com.example.blogengine.api.request.ModeratorRequest;
 import com.example.blogengine.api.request.PostRequest;
+import com.example.blogengine.api.request.PostVoteRequest;
 import com.example.blogengine.api.response.ErrorResponse;
 import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.api.response.posts.*;
@@ -188,6 +189,56 @@ public class PostServiceImpl implements PostService {
         return new ResultResponse().setResult(true);
     }
 
+    public ResultResponse postLike(PostVoteRequest postVoteRequest, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow();
+        Optional<PostVotes> postVotesOpt = postVotesRepository.findByPostId(postVoteRequest.getPostId(), user.getId());
+        ResultResponse resultResponse = new ResultResponse();
+        if (postVotesOpt.isEmpty()) {
+            PostVotes postVotes = new PostVotes()
+                    .setPost(postRepository.findPostById(postVoteRequest.getPostId()).orElseThrow())
+                    .setUser(user)
+                    .setTime(new Date())
+                    .setValue((byte) 1);
+            postVotesRepository.save(postVotes);
+            resultResponse.setResult(true);
+        } else {
+            PostVotes postVotes = postVotesOpt.get();
+            if (postVotes.getValue() == (byte) 0) {
+                postVotes
+                        .setTime(new Date())
+                        .setValue((byte) 1);
+                postVotesRepository.save(postVotes);
+                resultResponse.setResult(true);
+            }
+        }
+        return resultResponse;
+    }
+
+    public ResultResponse postDislike(PostVoteRequest postVoteRequest, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow();
+        Optional<PostVotes> postVotesOpt = postVotesRepository.findByPostId(postVoteRequest.getPostId(), user.getId());
+        ResultResponse resultResponse = new ResultResponse();
+        if (postVotesOpt.isEmpty()) {
+            PostVotes postVotes = new PostVotes()
+                    .setPost(postRepository.findPostById(postVoteRequest.getPostId()).orElseThrow())
+                    .setUser(user)
+                    .setTime(new Date())
+                    .setValue((byte) 0);
+            postVotesRepository.save(postVotes);
+            resultResponse.setResult(true);
+        } else {
+            PostVotes postVotes = postVotesOpt.get();
+            if (postVotes.getValue() == (byte) 1) {
+                postVotes
+                        .setTime(new Date())
+                        .setValue((byte) 0);
+                postVotesRepository.save(postVotes);
+                resultResponse.setResult(true);
+            }
+        }
+        return resultResponse;
+    }
+
     private void getErrorResponseForResultResponseIfLengthTitleOrTextNotFit(int titleLength, int textLength) {
         if (titleLength < 3 || textLength < 50) {
             new ResultResponse()
@@ -275,7 +326,7 @@ public class PostServiceImpl implements PostService {
         if (postVotes.size() != 0) {
             LinkedList<PostVotes> like = new LinkedList<>(postVotes);
             for (PostVotes l : like) {
-                if (l.getValue() == 0) {
+                if (l.getValue() == -1) {
                     dislikeCount++;
                 }
             }

@@ -27,3 +27,6 @@ mailjet:
     secret: ENC(oq8vsQrtMEX9hNYwfUjy3gwZIubjjd+2tccsK3jQKq+fqNDXZzizK+aRH7GuY107)
     from: ENC(umHEhd3xewaiif6GsHZOkVV2c5xBu5lR5UHXCzXb2+9th0TzHRFm9A==)
     version: v3.1
+jasypt:
+  encryptor:
+    bean: encryptorBean

@@ -1,7 +1,10 @@
 package com.example.blogengine.controller;
 
 import com.example.blogengine.api.request.LoginRequest;
+import com.example.blogengine.api.request.PasswordRequest;
+import com.example.blogengine.api.request.RestoreRequest;
 import com.example.blogengine.api.request.UserRequest;
+import com.example.blogengine.api.response.ResultPassResponse;
 import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.api.response.security.AuthCaptchaResponse;
 import com.example.blogengine.api.response.security.LoginResponse;
@@ -58,9 +61,12 @@ public class ApiAuthController {
     }
 
     @PostMapping("/restore")
-    public ResponseEntity<ResultResponse> postRestore(@RequestParam String email) throws MailjetException {
+    public ResponseEntity<ResultResponse> postRestore(@RequestBody RestoreRequest email) throws MailjetException {
         return new ResponseEntity<>(loginService.postRestore(email), HttpStatus.OK);
     }
 
-
+    @PostMapping("/password")
+    public ResponseEntity<ResultPassResponse> postPassword(@RequestBody PasswordRequest passwordRequest) {
+        return new ResponseEntity<>(loginService.postPassword(passwordRequest), HttpStatus.OK);
+    }
 }

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 public class Url {
-    @Value("${sever.base_url}")
+    @Value("${server.base_url}")
     private String baseUrl;
 }

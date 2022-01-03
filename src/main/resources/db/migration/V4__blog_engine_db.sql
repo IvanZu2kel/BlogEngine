@@ -4,6 +4,8 @@ values ('test@test.ru', 'test@test.ru', 0, 'Иван Талерантов', '$2a
      , ('123', 'test2@test.ru', 0, 'Леша Токарев', '$2a$12$ete5AM.ihMF58AA4Y6FRP.bDnKWAUr1K9MZuRQZ5Wsb7ystJFVSgO',
         null, now())
      , ('123', 'test3@test.ru', 1, 'Дарья Куцевалова', '$2a$12$NjzyOxCQYZO3i0oFwKmOv.2t47gYmCWa4D7gNH0GYdivuotrTx5ry',
+        null, now())
+     , ('123', 'ivan_zukkel@mail.ru', 1, 'Иван Зуккель', '$2a$12$okQlDb9MbvgLzJw0CKoQBuuOyXjL1V7LxNK2yKkyXYEYZAS6tpc5q',
         null, now());
 
 insert into tags(name)
