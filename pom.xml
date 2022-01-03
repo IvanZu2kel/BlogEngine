@@ -15,6 +15,12 @@
     <description>BlogEngine</description>
     <properties>
         <java.version>11</java.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <cage.version>1.0</cage.version>
+        <cloudinary.version>1.29.0</cloudinary.version>
+        <fileupload.version>1.4</fileupload.version>
+        <mailjet.version>5.2.0</mailjet.version>
+        <ulisesbocchio.version>3.0.4</ulisesbocchio.version>
     </properties>
     <dependencies>
         <dependency>
@@ -38,52 +44,65 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!--БД и миграции-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.cage</groupId>
-            <artifactId>cage</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
+        <!--Каптча-->
+        <dependency>
+            <groupId>com.github.cage</groupId>
+            <artifactId>cage</artifactId>
+            <version>${cage.version}</version>
+        </dependency>
+        <!--Файловый сервис-->
         <dependency>
             <groupId>com.cloudinary</groupId>
             <artifactId>cloudinary-http44</artifactId>
-            <version>1.29.0</version>
+            <version>${cloudinary.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
-            <version>1.4</version>
+            <version>${fileupload.version}</version>
         </dependency>
         <!--Почтовый сервис-->
         <dependency>
             <groupId>com.mailjet</groupId>
             <artifactId>mailjet-client</artifactId>
-            <version>5.2.0</version>
+            <version>${mailjet.version}</version>
         </dependency>
-
+        <!--Тестирование-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--Сокрытие паролей -->
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>3.0.4</version>
+            <version>${ulisesbocchio.version}</version>
         </dependency>
     </dependencies>
 
@@ -112,7 +131,7 @@
             <plugin>
                 <groupId>com.github.ulisesbocchio</groupId>
                 <artifactId>jasypt-maven-plugin</artifactId>
-                <version>3.0.4</version>
+                <version>${ulisesbocchio.version}</version>
             </plugin>
         </plugins>
     </build>

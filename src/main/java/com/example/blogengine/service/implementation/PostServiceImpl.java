@@ -204,12 +204,19 @@ public class PostServiceImpl implements PostService {
         } else {
             PostVotes postVotes = postVotesOpt.get();
             if (postVotes.getValue() == (byte) 0) {
-                postVotes
-                        .setTime(new Date())
-                        .setValue((byte) 1);
-                postVotesRepository.save(postVotes);
+                postVotes.setTime(new Date());
+                postVotes.setValue((byte) 1);
+                resultResponse.setResult(true);
+            } else if (postVotes.getValue() == (byte) 1){
+                postVotes.setTime(new Date());
+                postVotes.setValue((byte)-1);
+                resultResponse.setResult(false);
+            } else {
+                postVotes.setTime(new Date());
+                postVotes.setValue((byte) 1);
                 resultResponse.setResult(true);
             }
+            postVotesRepository.save(postVotes);
         }
         return resultResponse;
     }
@@ -229,12 +236,19 @@ public class PostServiceImpl implements PostService {
         } else {
             PostVotes postVotes = postVotesOpt.get();
             if (postVotes.getValue() == (byte) 1) {
-                postVotes
-                        .setTime(new Date())
-                        .setValue((byte) 0);
-                postVotesRepository.save(postVotes);
+                postVotes.setTime(new Date());
+                postVotes.setValue((byte) 0);
+                resultResponse.setResult(true);
+            } else if (postVotes.getValue() == (byte) 0){
+                postVotes.setTime(new Date());
+                postVotes.setValue((byte)-1);
+                resultResponse.setResult(false);
+            } else {
+                postVotes.setTime(new Date());
+                postVotes.setValue((byte) 0);
                 resultResponse.setResult(true);
             }
+            postVotesRepository.save(postVotes);
         }
         return resultResponse;
     }
