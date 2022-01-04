@@ -6,10 +6,7 @@ import com.example.blogengine.api.request.PostVoteRequest;
 import com.example.blogengine.api.response.posts.PostResponse;
 import com.example.blogengine.api.response.posts.PostsResponse;
 import com.example.blogengine.api.response.ResultResponse;
-import com.example.blogengine.exception.AuthorAndUserNoEqualsException;
-import com.example.blogengine.exception.PostNotFoundException;
-import com.example.blogengine.exception.StatusNotFoundException;
-import com.example.blogengine.exception.UsernameNotFoundException;
+import com.example.blogengine.exception.*;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -34,5 +31,5 @@ public interface PostService {
 
     ResultResponse putPostsById(int id, PostRequest postRequest, Principal principal) throws PostNotFoundException, AuthorAndUserNoEqualsException;
 
-    ResultResponse postModeratePost(ModeratorRequest moderatorRequest, Principal principal) throws PostNotFoundException;
+    ResultResponse postModeratePost(ModeratorRequest moderatorRequest, Principal principal) throws PostNotFoundException, ModeratorNotFoundException;
 }

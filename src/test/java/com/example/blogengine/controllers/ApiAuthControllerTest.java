@@ -93,7 +93,7 @@ public class ApiAuthControllerTest extends AbstractTest {
     }
 
     @Test
-    @WithMockUser(username = "test3@test.ru", authorities = "user:write")
+    @WithMockUser(username = "test3@test.ru", authorities = "user:moderate")
     void getCheckWithUserModer() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/auth/check")

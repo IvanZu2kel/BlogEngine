@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 @Data
 @Accessors(chain = true)
-public class TagsResponse {
-    private Tag4TagsResponse[] tags;
+public class Tag4TagsResponse {
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("weight")
+    private double weight;
 }

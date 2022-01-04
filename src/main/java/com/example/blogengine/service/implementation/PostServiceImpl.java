@@ -6,10 +6,7 @@ import com.example.blogengine.api.request.PostVoteRequest;
 import com.example.blogengine.api.response.ErrorResponse;
 import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.api.response.posts.*;
-import com.example.blogengine.exception.AuthorAndUserNoEqualsException;
-import com.example.blogengine.exception.PostNotFoundException;
-import com.example.blogengine.exception.StatusNotFoundException;
-import com.example.blogengine.exception.UsernameNotFoundException;
+import com.example.blogengine.exception.*;
 import com.example.blogengine.model.*;
 import com.example.blogengine.model.enumerated.ModerationStatus;
 import com.example.blogengine.repository.*;
@@ -176,8 +173,8 @@ public class PostServiceImpl implements PostService {
         return new ResultResponse().setResult(true);
     }
 
-    public ResultResponse postModeratePost(ModeratorRequest moderatorRequest, Principal principal) throws PostNotFoundException {
-        User moderator = userRepository.findByEmail(principal.getName()).orElseThrow();
+    public ResultResponse postModeratePost(ModeratorRequest moderatorRequest, Principal principal) throws PostNotFoundException, ModeratorNotFoundException {
+        User moderator = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new ModeratorNotFoundException(""));
         Post post = postRepository.findPostById(moderatorRequest.getPostId())
                 .orElseThrow(() -> new PostNotFoundException("Поста с данным id не существует"));
         switch (moderatorRequest.getDecision()) {

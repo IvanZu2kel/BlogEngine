@@ -1,23 +1,20 @@
 package com.example.blogengine.controller;
 
 import com.example.blogengine.api.request.ModeratorRequest;
-import com.example.blogengine.api.request.ProfileImageRequest;
-import com.example.blogengine.api.request.ProfileRequest;
 import com.example.blogengine.api.request.SettingsRequest;
 import com.example.blogengine.api.response.ResultResponse;
-import com.example.blogengine.api.response.profile.ProfileResponse;
 import com.example.blogengine.api.response.security.InitResponse;
 import com.example.blogengine.api.response.settings.CalendarResponse;
 import com.example.blogengine.api.response.settings.SettingsResponse;
 import com.example.blogengine.api.response.tags.TagsResponse;
 import com.example.blogengine.exception.IncorrectFormatException;
+import com.example.blogengine.exception.ModeratorNotFoundException;
 import com.example.blogengine.exception.PostNotFoundException;
 import com.example.blogengine.exception.StatusNotFoundException;
 import com.example.blogengine.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +35,6 @@ public class ApiGeneralController {
     private final CalendarService calendarService;
     private final StorageService storageService;
     private final PostService postService;
-    private final ProfileService profileService;
 
     @GetMapping("/init")
     public InitResponse init(){
@@ -70,7 +66,7 @@ public class ApiGeneralController {
     @PostMapping("/moderation")
     @PreAuthorize("hasAuthority('user:moderate')")
     public ResponseEntity<ResultResponse> postModeratePost(@RequestBody ModeratorRequest moderatorRequest,
-                                                           Principal principal) throws StatusNotFoundException, PostNotFoundException {
+                                                           Principal principal) throws StatusNotFoundException, PostNotFoundException, ModeratorNotFoundException {
         return new ResponseEntity<>(postService.postModeratePost(moderatorRequest, principal), HttpStatus.OK);
     }
 

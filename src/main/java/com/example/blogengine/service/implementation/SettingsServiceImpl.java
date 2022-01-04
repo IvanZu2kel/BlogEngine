@@ -49,7 +49,6 @@ public class SettingsServiceImpl implements SettingsService {
                     gS.setValue(settingsRequest.isPostPremoderation() ? "YES" : "NO");
                     globalSettingsRepository.save(gS);
                     break;
-
                 case STATISTICS_IS_PUBLIC:
                     gS.setValue(settingsRequest.isStatisticsIsPublic() ? "YES" : "NO");
                     globalSettingsRepository.save(gS);

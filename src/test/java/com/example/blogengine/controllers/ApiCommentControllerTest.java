@@ -2,9 +2,10 @@ package com.example.blogengine.controllers;
 
 import com.example.blogengine.AbstractTest;
 import com.example.blogengine.api.request.CommentRequest;
-import com.example.blogengine.model.CaptchaCodes;
 import com.example.blogengine.model.Post;
-import com.example.blogengine.repository.*;
+import com.example.blogengine.repository.PostCommentRepository;
+import com.example.blogengine.repository.PostRepository;
+import com.example.blogengine.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -38,10 +38,6 @@ public class ApiCommentControllerTest extends AbstractTest {
     @BeforeEach
     public void setup() {
         super.setup();
-    }
-
-    @AfterEach
-    public void clear() {
     }
 
     @Test

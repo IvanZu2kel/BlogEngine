@@ -27,7 +27,6 @@ public class CalendarServiceImpl implements CalendarService {
             year = String.valueOf(LocalDate.now().getYear());
         String finalYear = year;
         postList.forEach(post -> {
-
             yearSet.add(Integer.valueOf(yearFormat.format(post.getTime())));
             if (finalYear.equals(yearFormat.format(post.getTime())))
                 dateMap.compute(dayMonthYearFormat.format(post.getTime()), (k, v) -> (v == null) ? v = 1 : v + 1);
