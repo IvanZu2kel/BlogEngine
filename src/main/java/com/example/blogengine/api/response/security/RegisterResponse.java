@@ -1,20 +1,11 @@
 package com.example.blogengine.api.response.security;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class RegisterResponse {
-
-    private final Boolean result;
-
+    private Boolean result;
     private RegisterErrorResponse errors;
-
-    public RegisterResponse(Boolean result) {
-        this.result = result;
-    }
-
-    public RegisterResponse(Boolean result, RegisterErrorResponse error) {
-        this.result = result;
-        this.errors = error;
-    }
 }

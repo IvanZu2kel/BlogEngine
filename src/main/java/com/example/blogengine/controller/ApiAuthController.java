@@ -9,6 +9,7 @@ import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.api.response.security.AuthCaptchaResponse;
 import com.example.blogengine.api.response.security.LoginResponse;
 import com.example.blogengine.api.response.security.RegisterResponse;
+import com.example.blogengine.exception.UsernameNotFoundException;
 import com.example.blogengine.service.CaptchaService;
 import com.example.blogengine.service.CheckService;
 import com.example.blogengine.service.LoginService;
@@ -34,7 +35,7 @@ public class ApiAuthController {
     private final LoginService loginService;
 
     @GetMapping("/check")
-    public ResponseEntity<LoginResponse> check(Principal principal){
+    public ResponseEntity<LoginResponse> check(Principal principal) throws UsernameNotFoundException {
         return new ResponseEntity<>(checkService.getCheck(principal), HttpStatus.OK);
     }
 
@@ -57,7 +58,7 @@ public class ApiAuthController {
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<RegisterResponse> getLogout() {
         SecurityContextHolder.clearContext();
-        return new ResponseEntity<>(new RegisterResponse(true), HttpStatus.OK);
+        return new ResponseEntity<>(new RegisterResponse().setResult(true), HttpStatus.OK);
     }
 
     @PostMapping("/restore")

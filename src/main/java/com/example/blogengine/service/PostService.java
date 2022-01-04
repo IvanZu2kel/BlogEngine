@@ -35,8 +35,4 @@ public interface PostService {
     ResultResponse putPostsById(int id, PostRequest postRequest, Principal principal) throws PostNotFoundException, AuthorAndUserNoEqualsException;
 
     ResultResponse postModeratePost(ModeratorRequest moderatorRequest, Principal principal) throws PostNotFoundException;
-
-    ResultResponse postLike(PostVoteRequest postVoteRequest, Principal principal);
-
-    ResultResponse postDislike(PostVoteRequest postVoteRequest, Principal principal);
 }

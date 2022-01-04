@@ -23,9 +23,8 @@ public class CaptchaCodes {
     @NonNull
     @Column(columnDefinition = "tinytext")
     private String code;
-
-    @Column(name = "secret_code", columnDefinition = "tinytext")
     @NonNull
+    @Column(name = "secret_code", columnDefinition = "tinytext")
     private String secretCode;
 
 }

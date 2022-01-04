@@ -2,11 +2,11 @@ package com.example.blogengine.api.response.security;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class AuthCaptchaResponse {
-    @JsonProperty("secret")
     private String secret;
-    @JsonProperty("image")
     private String image;
 }

@@ -21,35 +21,31 @@ public class RegisterServiceImpl implements RegisterService {
     private final CaptchaRepository captchaRepository;
 
     public RegisterResponse postRegister(UserRequest userRequest) {
-        boolean result = true;
         RegisterErrorResponse registerErrorResponse = new RegisterErrorResponse();
         if (userRequest.getPassword().length() < 6) {
             registerErrorResponse.setPassword("Пароль короче 6-ти символов");
-            result = false;
+            return new RegisterResponse().setResult(false).setErrors(registerErrorResponse);
         }
-        if (userRequest.getEMail().equals(userRepository.findByEmail(userRequest.getEMail()))) {
+        if (userRepository.findByEmail(userRequest.getEMail()).isPresent()) {
             registerErrorResponse.setEmail("Этот e-mail уже зарегистрирован");
-            result = false;
+            return new RegisterResponse().setResult(false).setErrors(registerErrorResponse);
         }
         if (!(userRequest.getCaptcha().equals(captchaRepository.checkCaptcha(userRequest.getCaptchaSecret())))) {
             registerErrorResponse.setCaptcha("Код с картинки введён неверно");
-            result = false;
+            return new RegisterResponse().setResult(false).setErrors(registerErrorResponse);
         }
-        if (!(userRequest.getName().matches("[\\w]+"))) {
+        if (!(userRequest.getName().matches("[A-Za-zА-Яа-я0-9_]+"))) {
             registerErrorResponse.setName("Имя указано неверно. Имя может содержать буквы латинского алфавита, цифры или знак подчеркивания");
-            result = false;
-        }
-        if (!result) {
-            return new RegisterResponse(false, registerErrorResponse);
+            return new RegisterResponse().setResult(false).setErrors(registerErrorResponse);
         } else {
             User user = new User()
                     .setEmail(userRequest.getEMail())
                     .setName(userRequest.getName())
                     .setPassword(userRequest.getPassword())
-                    .setRegTime(Date.from(Instant.from(LocalDateTime.now())))
+                    .setRegTime(new Date())
                     .setIsModerator(0);
             userRepository.save(user);
-            return new RegisterResponse(true);
+            return new RegisterResponse().setResult(true);
         }
     }
 }

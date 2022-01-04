@@ -68,7 +68,7 @@ public class LoginServiceImpl implements LoginService {
                     .setResult(false)
                     .setErrors(new ErrorPassResponse().setPassword("Пароль слишком короткий"));
         }
-        if (user.isEmpty()) {
+        if (passwordRequest.getCode().isEmpty()) {
             return new ResultPassResponse()
                     .setResult(false)
                     .setErrors(new ErrorPassResponse()
