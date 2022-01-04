@@ -86,7 +86,7 @@ public class ApiGeneralControllerTest extends AbstractTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/tag")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("query","новости"))
+                        .param("query", "новости"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

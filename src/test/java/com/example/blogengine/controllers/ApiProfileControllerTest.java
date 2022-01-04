@@ -1,10 +1,8 @@
 package com.example.blogengine.controllers;
 
 import com.example.blogengine.AbstractTest;
-import com.example.blogengine.api.request.CommentRequest;
-import com.example.blogengine.model.Post;
-import com.example.blogengine.repository.PostCommentRepository;
-import com.example.blogengine.repository.PostRepository;
+import com.example.blogengine.api.request.ProfileRequest;
+import com.example.blogengine.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +16,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(value = {"classpath:application-test.properties"})
-public class ApiCommentControllerTest extends AbstractTest {
+public class ApiProfileControllerTest extends AbstractTest {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private PostCommentRepository postCommentRepository;
 
     @BeforeEach
     public void setup() {
@@ -38,30 +30,31 @@ public class ApiCommentControllerTest extends AbstractTest {
 
     @Test
     @WithMockUser(username = "test@test.ru", authorities = "user:write")
-    void editComment() throws Exception {
-        List<Post> posts = postRepository.findPosts();
-        Post post = posts.get(0);
-
-        CommentRequest commentRequest = new CommentRequest()
-                .setPostId(post.getId())
-                .setText("new text");
+    void postProfileWithoutImage() throws Exception {
+        ProfileRequest profileRequest = new ProfileRequest()
+                .setName("Ivan")
+                .setPassword("qwerty123");
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/comment")
-                        .principal(() -> "test@test.ru")
+                        .post("/api/profile/my")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(commentRequest)))
+                        .content(mapper.writeValueAsString(profileRequest)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id")
-                        .value(postCommentRepository.findLastPost().get(0).getId())).andReturn();
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result").value(true)).andReturn();
+    }
 
-        commentRequest.setPostId(1212);
+    @Test
+    @WithMockUser(username = "test@test.ru", authorities = "user:write")
+    void postProfileWithoutImageError() throws Exception {
+        ProfileRequest profileRequest = new ProfileRequest()
+                .setName("Ivan")
+                .setPassword("q12");
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/comment")
-                        .principal(() -> "test@test.ru")
+                        .post("/api/profile/my")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(commentRequest)))
+                        .content(mapper.writeValueAsString(profileRequest)))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result").value(false)).andReturn();
     }
 }
