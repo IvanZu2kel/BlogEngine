@@ -28,4 +28,7 @@ public interface PostVotesRepository extends JpaRepository<PostVotes, Integer> {
 
     @Query("select pv from PostVotes pv where pv.post.id = :postId and pv.user.id = :id")
     Optional<PostVotes> findByPostId(int postId, int id);
+
+    @Query("select pv from PostVotes pv order by pv.id desc")
+    List<PostVotes> findLastPost();
 }

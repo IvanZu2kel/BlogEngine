@@ -46,7 +46,8 @@ public class CommentServiceImpl implements CommentService {
                     .setUser(user)
                     .setTime(new Date())
                     .setText(commentRequest.getText());
-            commentResponse.setId(postCommentRepository.save(postComment).getId());
+            PostComment comment = postCommentRepository.save(postComment);
+            commentResponse.setId(comment.getId());
             return new ResponseEntity<>(commentResponse, HttpStatus.OK);
         }
     }
