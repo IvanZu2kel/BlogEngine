@@ -31,7 +31,6 @@ public class CalendarServiceImpl implements CalendarService {
             yearSet.add(Integer.valueOf(yearFormat.format(post.getTime())));
             if (finalYear.equals(yearFormat.format(post.getTime())))
                 dateMap.compute(dayMonthYearFormat.format(post.getTime()), (k, v) -> (v == null) ? v = 1 : v + 1);
-
         });
         return new CalendarResponse()
                 .setPosts(dateMap)

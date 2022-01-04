@@ -74,21 +74,6 @@ public class ApiGeneralController {
         return new ResponseEntity<>(postService.postModeratePost(moderatorRequest, principal), HttpStatus.OK);
     }
 
-
-    @PostMapping(value = "/profile/my", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('user:write')")
-    public ResponseEntity<ProfileResponse> postProfile(@ModelAttribute ProfileImageRequest profileImageRequest,
-                                                       Principal principal) throws StatusNotFoundException, PostNotFoundException, IncorrectFormatException, IOException {
-        return new ResponseEntity<>(profileService.postProfile(profileImageRequest, principal), HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/profile/my", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('user:write')")
-    public ResponseEntity<ProfileResponse> postProfile(@RequestBody ProfileRequest profileRequest,
-                                                      Principal principal) throws StatusNotFoundException, PostNotFoundException {
-        return new ResponseEntity<>(profileService.postProfile(profileRequest, principal), HttpStatus.OK);
-    }
-
     @PutMapping("/settings")
     @PreAuthorize("hasAuthority('user:moderate')")
     public void putSettings(@RequestBody SettingsRequest settingsRequest) {

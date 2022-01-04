@@ -24,7 +24,6 @@ public class StatisticServiceImpl implements StatisticService {
     private final PostVotesRepository postVotesRepository;
     private final GlobalSettingsRepository settingsRepository;
 
-
     public StatisticResponse getMyStatistic(Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
         int SECOND = 1000;

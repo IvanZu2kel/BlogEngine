@@ -42,7 +42,6 @@ public class CaptchaServiceImpl implements CaptchaService {
         baos.flush();
         byte[] imageInByte = baos.toByteArray();
         baos.close();
-
         return "data:image/png;base64," + Base64.getEncoder().encodeToString(imageInByte);
     }
 

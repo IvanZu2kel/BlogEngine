@@ -9,7 +9,9 @@ import com.example.blogengine.exception.AuthorAndUserNoEqualsException;
 import com.example.blogengine.exception.PostNotFoundException;
 import com.example.blogengine.exception.StatusNotFoundException;
 import com.example.blogengine.exception.UsernameNotFoundException;
+import com.example.blogengine.model.PostVotes;
 import com.example.blogengine.service.PostService;
+import com.example.blogengine.service.PostVotesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class ApiPostController {
     private final PostService postService;
+    private final PostVotesService postVotesService;
 
     @GetMapping("")
     public ResponseEntity<PostsResponse> getPosts(@RequestParam(defaultValue = "0") int offset,
@@ -95,14 +98,14 @@ public class ApiPostController {
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<ResultResponse> postLike(@RequestBody PostVoteRequest postVoteRequest,
                                                    Principal principal) {
-        return new ResponseEntity<>(postService.postLike(postVoteRequest, principal), HttpStatus.OK);
+        return new ResponseEntity<>(postVotesService.postLike(postVoteRequest, principal), HttpStatus.OK);
     }
 
     @PostMapping("/dislike")
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<ResultResponse> postDislike(@RequestBody PostVoteRequest postVoteRequest,
                                                       Principal principal) {
-        return new ResponseEntity<>(postService.postDislike(postVoteRequest, principal), HttpStatus.OK);
+        return new ResponseEntity<>(postVotesService.postDislike(postVoteRequest, principal), HttpStatus.OK);
     }
 
 }
