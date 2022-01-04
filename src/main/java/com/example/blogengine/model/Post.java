@@ -1,17 +1,15 @@
 package com.example.blogengine.model;
 
 import com.example.blogengine.model.enumerated.ModerationStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "posts")
 @AllArgsConstructor
@@ -54,13 +52,14 @@ public class Post {
     @Column(name = "view_count", columnDefinition = "int")
     @NonNull
     private int viewCount;
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(name = "tag2post",
             joinColumns = {@JoinColumn(name = "post_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")})
     private List<Tag> tags;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany
+    @JoinColumn(name = "post_id")
     private List<PostVotes> like;
 
     @OneToMany(mappedBy = "post")
