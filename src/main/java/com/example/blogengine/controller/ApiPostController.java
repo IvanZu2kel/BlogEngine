@@ -107,5 +107,4 @@ public class ApiPostController {
                                                       Principal principal) {
         return new ResponseEntity<>(postVotesService.postDislike(postVoteRequest, principal), HttpStatus.OK);
     }
-
 }

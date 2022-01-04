@@ -2,7 +2,6 @@ package com.example.blogengine.service.implementation;
 
 import com.example.blogengine.api.request.ModeratorRequest;
 import com.example.blogengine.api.request.PostRequest;
-import com.example.blogengine.api.request.PostVoteRequest;
 import com.example.blogengine.api.response.ErrorResponse;
 import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.api.response.posts.*;
@@ -30,6 +29,7 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final PostVotesRepository postVotesRepository;
     private final Tag2PostRepository tag2PostRepository;
+    private final TagRepository tagRepository;
 
     public PostsResponse getPosts(int offset, int limit, String mode) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
@@ -141,8 +141,13 @@ public class PostServiceImpl implements PostService {
 
     public ResultResponse createPost(PostRequest postRequest, Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
-        getErrorResponseForResultResponseIfLengthTitleOrTextNotFit(postRequest.getTitle().length(), postRequest.getText().length());
-
+        if (postRequest.getTitle().length() < 3 || postRequest.getText().length() < 50) {
+            return new ResultResponse()
+                    .setResult(false)
+                    .setErrors(new ErrorResponse()
+                            .setTitle("Заголовок не установлен")
+                            .setText("Текст публикации слишком короткий"));
+        }
         Date date = setDatePost(postRequest.getTimestamp());
         Post post = new Post()
                 .setText(postRequest.getText())
@@ -151,13 +156,20 @@ public class PostServiceImpl implements PostService {
                 .setTime(date)
                 .setUser(user)
                 .setModerationStatus(ModerationStatus.NEW);
-        setTagsForPost(post, postRequest.getTags());
-        postRepository.save(post);
+        Post sPost = postRepository.save(post);
+        setTagsForPost(sPost, postRequest.getTags());
+        postRepository.save(sPost);
         return new ResultResponse().setResult(true);
     }
 
     public ResultResponse putPostsById(int id, PostRequest postRequest, Principal principal) throws PostNotFoundException, AuthorAndUserNoEqualsException {
-        getErrorResponseForResultResponseIfLengthTitleOrTextNotFit(postRequest.getTitle().length(), postRequest.getText().length());
+        if (postRequest.getTitle().length() < 3 || postRequest.getText().length() < 50) {
+            return new ResultResponse()
+                    .setResult(false)
+                    .setErrors(new ErrorResponse()
+                            .setTitle("Заголовок не установлен")
+                            .setText("Текст публикации слишком короткий"));
+        }
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
         Post post = postRepository.findPostById(id).orElseThrow(() -> new PostNotFoundException("Поста с данным id не существует"));
         if (user.getId() == post.getUser().getId()) {
@@ -167,8 +179,9 @@ public class PostServiceImpl implements PostService {
                     .setIsActive(postRequest.getActive())
                     .setTitle(postRequest.getTitle())
                     .setText(postRequest.getText());
-            setTagsForPost(post, postRequest.getTags());
-            postRepository.save(post);
+            Post sPost = postRepository.save(post);
+            setTagsForPost(sPost, postRequest.getTags());
+            postRepository.save(sPost);
         } else throw new AuthorAndUserNoEqualsException("пользователь не может изменить чужую статью");
         return new ResultResponse().setResult(true);
     }
@@ -186,22 +199,12 @@ public class PostServiceImpl implements PostService {
         return new ResultResponse().setResult(true);
     }
 
-
-    private void getErrorResponseForResultResponseIfLengthTitleOrTextNotFit(int titleLength, int textLength) {
-        if (titleLength < 3 || textLength < 50) {
-            new ResultResponse()
-                    .setResult(false)
-                    .setErrors(new ErrorResponse()
-                            .setTitle("Заголовок не установлен")
-                            .setText("Текст публикации слишком короткий"));
-        }
-    }
-
     private void setTagsForPost(Post post, List<String> tags) {
         List<String> tagList = new ArrayList<>(tags);
         for (String t : tagList) {
             Tag tag = new Tag()
                     .setName(t);
+            tagRepository.save(tag);
             Tag2Post tag2Post = new Tag2Post()
                     .setPost_id(post.getId())
                     .setTag_id(tag.getId());

@@ -29,8 +29,6 @@ public class ApiCommentControllerTest extends AbstractTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private PostRepository postRepository;
     @Autowired
     private PostCommentRepository postCommentRepository;
