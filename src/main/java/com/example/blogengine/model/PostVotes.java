@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -30,7 +29,7 @@ public class PostVotes {
     @NonNull
     private Date time;
 
-    @Column(name = "value", columnDefinition = "tinyint(1)")
+    @Column(name = "value", columnDefinition = "tinyint(0)")
     @NonNull
     private byte value;
 }
