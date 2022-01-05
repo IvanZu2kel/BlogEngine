@@ -61,7 +61,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "AND p.`time` <= NOW() ORDER BY p.time DESC", nativeQuery = true)
     Page<Post> findPostsMyIsActive(@Param("status") String status, @Param("email") String email, Pageable pageable);
 
-    @Query("select p from Post p")
+    @Query("select p from Post p where p.moderationStatus = 'ACCEPTED' and p.isActive = 1")
     List<Post> findPosts();
 
     @Query("select sum(viewCount) from Post where user.id = :id group by user")
