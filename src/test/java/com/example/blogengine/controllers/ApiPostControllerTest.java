@@ -3,6 +3,7 @@ package com.example.blogengine.controllers;
 import com.example.blogengine.AbstractTest;
 import com.example.blogengine.api.request.PostRequest;
 import com.example.blogengine.model.Post;
+import com.example.blogengine.model.Tag2Post;
 import com.example.blogengine.model.User;
 import com.example.blogengine.model.enumerated.ModerationStatus;
 import com.example.blogengine.repository.PostRepository;
