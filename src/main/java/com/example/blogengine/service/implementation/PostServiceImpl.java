@@ -254,7 +254,7 @@ public class PostServiceImpl implements PostService {
         return new PostResponseList()
                 .setActive(post.getIsActive() == 1)
                 .setId(post.getId())
-                .setTimestamp(post.getTime().toInstant().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000)
+                .setTimestamp(new Date().getTime() / 1000)
                 .setUser(new UserPostResponse().setName(post.getUser().getName()).setId(post.getUser().getId()))
                 .setTitle(post.getTitle())
                 .setAnnounce(setAnnounce(post))
@@ -268,7 +268,7 @@ public class PostServiceImpl implements PostService {
         List<PostVotes> likeAndDislike = postVotesRepository.getAllByPostId(post.getId());
         return new PostResponse()
                 .setId(post.getId())
-                .setTimestamp(post.getTime().toInstant().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000)
+                .setTimestamp(new Date().getTime() / 1000)
                 .setActive(post.getIsActive() == 1)
                 .setUser(new UserPostResponse().setName(post.getUser().getName()).setId(post.getUser().getId()))
                 .setTitle(post.getTitle())
