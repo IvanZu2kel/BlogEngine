@@ -30,7 +30,7 @@ public class PostVotes {
     @NonNull
     private Date time;
 
-    @Column(name = "value", columnDefinition = "tinyint(1)")
+    @Column(name = "value", columnDefinition = "tinyint(0)")
     @NonNull
     private byte value;
 }
