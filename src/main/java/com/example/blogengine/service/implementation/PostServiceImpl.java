@@ -35,10 +35,22 @@ public class PostServiceImpl implements PostService {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Post> postPage;
         switch (mode) {
-            case "popular" -> postPage = postRepository.findAllPostsByCommentsDesc(pageable);
-            case "best" -> postPage = postRepository.findAllPostsByVotesDesc(pageable);
-            case "early" -> postPage = postRepository.findAllPostsByTime(pageable);
-            default -> postPage = postRepository.findAllPostsByTimeDesc(pageable);
+            case "popular": {
+                postPage = postRepository.findAllPostsByCommentsDesc(pageable);
+                break;
+            }
+            case "best": {
+                postPage = postRepository.findAllPostsByVotesDesc(pageable);
+                break;
+            }
+            case "early": {
+                postPage = postRepository.findAllPostsByTime(pageable);
+                break;
+            }
+            default: {
+                postPage = postRepository.findAllPostsByTimeDesc(pageable);
+                break;
+            }
         }
         return createPostResponse(postPage, postRepository.findAllPosts().size());
     }
@@ -99,19 +111,19 @@ public class PostServiceImpl implements PostService {
         Pageable pageable;
         pageable = PageRequest.of(offset / limit, limit);
         switch (status) {
-            case "inactive" -> {
+            case "inactive": {
                 Page<Post> posts = postRepository.findPostsMyInactive(pageable, principal.getName());
                 return createPostResponse(posts, (int) posts.getTotalElements());
             }
-            case "pending" -> {
+            case "pending": {
                 Page<Post> posts = postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
                 return createPostResponse(posts, (int) posts.getTotalElements());
             }
-            case "declined" -> {
+            case "declined": {
                 Page<Post> posts = postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
                 return createPostResponse(posts, (int) posts.getTotalElements());
             }
-            case "published" -> {
+            case "published": {
                 Page<Post> posts = postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
                 return createPostResponse(posts, (int) posts.getTotalElements());
             }
@@ -123,15 +135,15 @@ public class PostServiceImpl implements PostService {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         User moder = userRepository.findByEmail(principal.getName()).orElseThrow();
         switch (status) {
-            case "new" -> {
+            case "new": {
                 Page<Post> posts = postRepository.findPostsByModerate(ModerationStatus.NEW, pageable);
                 return createPostResponse(posts, (int) posts.getTotalElements());
             }
-            case "declined" -> {
+            case "declined": {
                 Page<Post> posts = postRepository.findPostsMyModerate(ModerationStatus.DECLINED, moder.getId(), pageable);
                 return createPostResponse(posts, (int) posts.getTotalElements());
             }
-            case "accepted" -> {
+            case "accepted": {
                 Page<Post> posts = postRepository.findPostsMyModerate(ModerationStatus.ACCEPTED, moder.getId(), pageable);
                 return createPostResponse(posts, (int) posts.getTotalElements());
             }
@@ -191,8 +203,14 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findPostById(moderatorRequest.getPostId())
                 .orElseThrow(() -> new PostNotFoundException("Поста с данным id не существует"));
         switch (moderatorRequest.getDecision()) {
-            case "accept" -> post.setModerationStatus(ModerationStatus.ACCEPTED);
-            case "decline" -> post.setModerationStatus(ModerationStatus.DECLINED);
+            case "accept": {
+                post.setModerationStatus(ModerationStatus.ACCEPTED);
+                break;
+            }
+            case "decline": {
+                post.setModerationStatus(ModerationStatus.DECLINED);
+                break;
+            }
         }
         post.setModerator(moderator);
         postRepository.save(post);

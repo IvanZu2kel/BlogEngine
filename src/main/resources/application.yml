@@ -3,9 +3,9 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
   datasource:
-    url: jdbc:mysql://localhost:3306/blog_engine?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&amp&serverTimezone=Europe/Moscow
+    url: jdbc:${CLEARDB_PURPLE_URL:mysql://localhost:3306/blog_engine}
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ENC(eG0r4FT1dPNlYKFt8C0cdQ==)
     password: ENC(xbkrb8StJMl8a+LzQXS2iJykT9wSEcfx)
@@ -19,8 +19,8 @@ blog:
   copyright: Зуккель Иван
   copyrightFrom: 2021
 server:
-  port: 8081
-  base_url: http://localhost:8081
+  port: ${PORT:8081}
+  base_url: https://zukkel-java-blog.herokuapp.com
 mailjet:
   mail:
     key: ENC(DNVszMtuQ5agS7APJ9XdIUsV9uF7YvUMudy6ulvaQKlGC8+tZlTFTtelwJV80EZz)
