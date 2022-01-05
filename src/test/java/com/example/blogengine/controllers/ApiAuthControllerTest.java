@@ -190,10 +190,10 @@ public class ApiAuthControllerTest extends AbstractTest {
 
     @Test
     void login() throws Exception {
-        LoginRequest loginRequest = new LoginRequest()
-                .setEmail("test@test.ru")
-                .setPassword("test@test.ru");
-        User user = userRepository.findByEmail("test@test.ru").orElseThrow();
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail("test2@test.ru");
+        loginRequest.setPassword("test2@test.ru");
+        User user = userRepository.findByEmail("test2@test.ru").orElseThrow();
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
