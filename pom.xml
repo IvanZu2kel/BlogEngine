@@ -15,6 +15,7 @@
     <description>BlogEngine</description>
     <properties>
         <java.version>11</java.version>
+        <flyway.version>5.2.4</flyway.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <cage.version>1.0</cage.version>
         <cloudinary.version>1.29.0</cloudinary.version>
@@ -58,6 +59,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
