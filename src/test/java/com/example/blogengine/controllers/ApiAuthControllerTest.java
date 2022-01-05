@@ -194,6 +194,7 @@ public class ApiAuthControllerTest extends AbstractTest {
                 .setEmail("test@test.ru")
                 .setPassword("test@test.ru");
         User user = userRepository.findByEmail("test@test.ru").orElseThrow();
+
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -202,6 +203,7 @@ public class ApiAuthControllerTest extends AbstractTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.user.id").value(user.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.user.moderation").value(false)).andReturn();
+
         loginRequest.setEmail("123231234@mail.re");
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/auth/login")
