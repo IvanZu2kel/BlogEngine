@@ -5,7 +5,7 @@ spring:
     hibernate:
       ddl-auto: none
   datasource:
-    url: jdbc:${CLEARDB_PURPLE_URL:mysql://localhost:3306/blog_engine}?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&amp&serverTimezone=Europe/Moscow
+    url: jdbc:${CLEARDB_PURPLE_URL:mysql://localhost:3306/blog_engine}
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ENC(eG0r4FT1dPNlYKFt8C0cdQ==)
     password: ENC(xbkrb8StJMl8a+LzQXS2iJykT9wSEcfx)

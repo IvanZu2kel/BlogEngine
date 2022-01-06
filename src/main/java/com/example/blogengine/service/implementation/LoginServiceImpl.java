@@ -59,7 +59,7 @@ public class LoginServiceImpl implements LoginService {
             String code = generateSecretKey();
             user.get().setCode(code);
             userRepository.save(user.get());
-            String message = url.getBaseUrl() + "/login/change-password?" + code;
+            String message = url.getBaseUrl() + "/login/change-password/" + code;
             sender.send(request.getEmail(), message);
             return new ResultResponse().setResult(true);
         } else return new ResultResponse().setResult(false);
