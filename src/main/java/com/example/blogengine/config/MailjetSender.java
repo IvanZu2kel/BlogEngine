@@ -34,7 +34,7 @@ public class MailjetSender {
                                         .put(new JSONObject()
                                                 .put("Email", emailTo)
                                                 .put("Name", "DevPub")))
-                                .put(Emailv31.Message.SUBJECT, "ССылка на восстановалние пароля")
+                                .put(Emailv31.Message.SUBJECT, "Ссылка на восстановалние пароля")
                                 .put(Emailv31.Message.TEXTPART, "")
                                 .put(Emailv31.Message.HTMLPART, message)
                                 .put(Emailv31.Message.CUSTOMID, "AppGettingStartedTest")));

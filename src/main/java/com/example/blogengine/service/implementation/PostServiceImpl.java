@@ -30,6 +30,7 @@ public class PostServiceImpl implements PostService {
     private final PostVotesRepository postVotesRepository;
     private final Tag2PostRepository tag2PostRepository;
     private final TagRepository tagRepository;
+    private final GlobalSettingsRepository globalSettingsRepository;
 
     public PostsResponse getPosts(int offset, int limit, String mode) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
@@ -166,8 +167,15 @@ public class PostServiceImpl implements PostService {
                 .setTitle(postRequest.getTitle())
                 .setIsActive(postRequest.getActive())
                 .setTime(date)
-                .setUser(user)
-                .setModerationStatus(ModerationStatus.NEW);
+                .setUser(user);
+        if (globalSettingsRepository.findAllGlobalSettings("POST_PREMODERATION").getValue().equals("YES")
+                && user.getIsModerator() == 0) {
+            post.setModerationStatus(ModerationStatus.NEW);
+        }
+        if (globalSettingsRepository.findAllGlobalSettings("POST_PREMODERATION").getValue().equals("NO")
+                && postRequest.getActive() == 1) {
+            post.setModerationStatus(ModerationStatus.ACCEPTED);
+        }
         Post sPost = postRepository.save(post);
         setTagsForPost(sPost, postRequest.getTags());
         postRepository.save(sPost);

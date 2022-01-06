@@ -9,6 +9,7 @@ import com.example.blogengine.api.response.ResultResponse;
 import com.example.blogengine.api.response.security.AuthCaptchaResponse;
 import com.example.blogengine.api.response.security.LoginResponse;
 import com.example.blogengine.api.response.security.RegisterResponse;
+import com.example.blogengine.exception.MultiuserModeException;
 import com.example.blogengine.exception.UsernameNotFoundException;
 import com.example.blogengine.service.CaptchaService;
 import com.example.blogengine.service.CheckService;
@@ -45,7 +46,7 @@ public class ApiAuthController {
     }
 
     @PostMapping("/register")
-    public RegisterResponse postRegister(@RequestBody UserRequest userRequest) {
+    public RegisterResponse postRegister(@RequestBody UserRequest userRequest) throws MultiuserModeException {
         return registerService.postRegister(userRequest);
     }
 

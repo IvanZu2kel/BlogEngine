@@ -16,44 +16,21 @@ import java.util.Optional;
 public class SettingsServiceImpl implements SettingsService {
     private final GlobalSettingsRepository globalSettingsRepository;
 
-    private final int MULTIUSER_MODE = 1;
-    private final int POST_PREMODERATION = 2;
-    private final int STATISTICS_IS_PUBLIC = 3;
-
     public SettingsResponse getGlobalSettings() {
         SettingsResponse settingsResponse = new SettingsResponse();
-        globalSettingsRepository.findAll().forEach(gS -> {
-            switch (gS.getId()) {
-                case MULTIUSER_MODE:
-                    settingsResponse.setMultiuserMode(gS.getValue().equals("YES"));
-                    break;
-                case POST_PREMODERATION:
-                    settingsResponse.setPostPremoderation(gS.getValue().equals("YES"));
-                    break;
-                case STATISTICS_IS_PUBLIC:
-                    settingsResponse.setStatisticIsPublic(gS.getValue().equals("YES"));
-                    break;
-            }
-        });
+        settingsResponse.setMultiuserMode(globalSettingsRepository.findAllGlobalSettings("MULTIUSER_MODE").getValue().equals("YES"));
+        settingsResponse.setPostPremoderation(globalSettingsRepository.findAllGlobalSettings("POST_PREMODERATION").getValue().equals("YES"));
+        settingsResponse.setStatisticIsPublic(globalSettingsRepository.findAllGlobalSettings("STATISTICS_IS_PUBLIC").getValue().equals("YES"));
         return settingsResponse;
     }
 
     public void putGlobalSettings(SettingsRequest settingsRequest) {
-        globalSettingsRepository.findAll().forEach(gS -> {
-            switch (gS.getId()) {
-                case MULTIUSER_MODE:
-                    gS.setValue(settingsRequest.isMultiuserMode() ? "YES" : "NO");
-                    globalSettingsRepository.save(gS);
-                    break;
-                case POST_PREMODERATION:
-                    gS.setValue(settingsRequest.isPostPremoderation() ? "YES" : "NO");
-                    globalSettingsRepository.save(gS);
-                    break;
-                case STATISTICS_IS_PUBLIC:
-                    gS.setValue(settingsRequest.isStatisticsIsPublic() ? "YES" : "NO");
-                    globalSettingsRepository.save(gS);
-                    break;
-            }
-        });
+        String MULTIUSER_MODE = settingsRequest.isMultiuserMode() ? "YES" : "NO";
+        String POST_PREMODERATION = settingsRequest.isPostPremoderation() ? "YES" : "NO";
+        String STATISTICS_IS_PUBLIC = settingsRequest.isStatisticsIsPublic() ? "YES" : "NO";
+
+        globalSettingsRepository.insertSettings("MULTIUSER_MODE", MULTIUSER_MODE);
+        globalSettingsRepository.insertSettings("POST_PREMODERATION", POST_PREMODERATION);
+        globalSettingsRepository.insertSettings("STATISTICS_IS_PUBLIC", STATISTICS_IS_PUBLIC);
     }
 }

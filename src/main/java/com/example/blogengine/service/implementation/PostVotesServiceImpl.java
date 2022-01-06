@@ -44,8 +44,7 @@ public class PostVotesServiceImpl implements PostVotesService {
                     .setValue((byte) 1);
             postVotesRepository.save(votesOld);
             return new ResultResponse().setResult(true);
-        }
-        else if (votesOld.getValue() == 1){
+        } else if (votesOld.getValue() == 1) {
             return new ResultResponse().setResult(false);
         }
         return new ResultResponse().setResult(true);
@@ -70,8 +69,7 @@ public class PostVotesServiceImpl implements PostVotesService {
                     .setValue((byte) -1);
             postVotesRepository.save(votesOld);
             return new ResultResponse().setResult(true);
-        }
-        else if (votesOld.getValue() == -1) {
+        } else if (votesOld.getValue() == -1) {
             return new ResultResponse().setResult(false);
         }
         return new ResultResponse().setResult(true);

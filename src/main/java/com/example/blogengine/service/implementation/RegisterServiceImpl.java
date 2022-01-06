@@ -3,8 +3,10 @@ package com.example.blogengine.service.implementation;
 import com.example.blogengine.api.request.UserRequest;
 import com.example.blogengine.api.response.security.RegisterErrorResponse;
 import com.example.blogengine.api.response.security.RegisterResponse;
+import com.example.blogengine.exception.MultiuserModeException;
 import com.example.blogengine.model.User;
 import com.example.blogengine.repository.CaptchaRepository;
+import com.example.blogengine.repository.GlobalSettingsRepository;
 import com.example.blogengine.repository.UserRepository;
 import com.example.blogengine.service.RegisterService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +22,13 @@ import java.util.Date;
 public class RegisterServiceImpl implements RegisterService {
     private final UserRepository userRepository;
     private final CaptchaRepository captchaRepository;
+    private final GlobalSettingsRepository globalSettingsRepository;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-    public RegisterResponse postRegister(UserRequest userRequest) {
+    public RegisterResponse postRegister(UserRequest userRequest) throws MultiuserModeException {
+        if (globalSettingsRepository.findAllGlobalSettings("MULTIUSER_MODE").getValue().equals("YES")) {
+            throw new MultiuserModeException();
+        }
         RegisterErrorResponse registerErrorResponse = new RegisterErrorResponse();
         if (userRequest.getPassword().length() < 6) {
             registerErrorResponse.setPassword("Пароль короче 6-ти символов");
