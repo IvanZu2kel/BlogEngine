@@ -74,7 +74,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Optional<Date> findLatestPostByUser(int id);
 
     @Query("select p from Post p " +
-            "left join User u on p.user.id = u.id " +
             "where p.isActive = 1 and p.moderationStatus = :status and p.time <= current_timestamp " +
             "order by p.time desc ")
     Page<Post> findPostsByModerate(ModerationStatus status, Pageable pageable);
