@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -27,8 +29,5 @@ public interface PostVotesRepository extends JpaRepository<PostVotes, Integer> {
     Optional<Integer> findDislikeCount();
 
     @Query("select pv from PostVotes pv where pv.post.id = :postId and pv.user.id = :id")
-    Optional<PostVotes> findByPostId(int postId, int id);
-
-    @Query("select pv from PostVotes pv order by pv.id desc")
-    List<PostVotes> findLastPost();
+    PostVotes findVotes(int postId, int id);
 }

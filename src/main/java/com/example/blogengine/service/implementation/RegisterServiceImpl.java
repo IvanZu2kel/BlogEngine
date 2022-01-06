@@ -8,6 +8,7 @@ import com.example.blogengine.repository.CaptchaRepository;
 import com.example.blogengine.repository.UserRepository;
 import com.example.blogengine.service.RegisterService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 import java.time.Instant;
@@ -19,6 +20,7 @@ import java.util.Date;
 public class RegisterServiceImpl implements RegisterService {
     private final UserRepository userRepository;
     private final CaptchaRepository captchaRepository;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     public RegisterResponse postRegister(UserRequest userRequest) {
         RegisterErrorResponse registerErrorResponse = new RegisterErrorResponse();
@@ -41,7 +43,7 @@ public class RegisterServiceImpl implements RegisterService {
             User user = new User()
                     .setEmail(userRequest.getEMail())
                     .setName(userRequest.getName())
-                    .setPassword(userRequest.getPassword())
+                    .setPassword(encoder.encode(userRequest.getPassword()))
                     .setRegTime(new Date())
                     .setIsModerator(0);
             userRepository.save(user);

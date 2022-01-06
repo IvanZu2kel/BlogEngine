@@ -1,15 +1,13 @@
 package com.example.blogengine.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "post_votes")
 @NoArgsConstructor
@@ -20,18 +18,18 @@ public class PostVotes {
     @NonNull
     private int id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch =FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable=false)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch =FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "post_id", nullable=false)
     private Post post;
 
     @NonNull
     private Date time;
 
-    @Column(name = "value", columnDefinition = "tinyint(1)")
+    @Column(name = "value", columnDefinition = "tinyint(0)")
     @NonNull
     private byte value;
 }
