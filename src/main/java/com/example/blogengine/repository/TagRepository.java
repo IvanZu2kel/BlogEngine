@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Integer> {
@@ -17,4 +18,7 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
 
     @Query("select t from Tag t left join Tag2Post t2p on t.id = t2p.tag_id where t2p.post_id = :id ")
     List<String> findTagsById(int id);
+
+    @Query(nativeQuery = true, value = "select * from tags t where t.name = :t order by t.id desc limit 1")
+    Optional<Tag> findByTag(String t);
 }

@@ -41,12 +41,16 @@ public class LoginServiceImpl implements LoginService {
     private final Url url;
 
     public LoginResponse postLogin(LoginRequest loginRequest) {
-        Authentication auth = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        User user = getUser(auth);
-        UserLoginResponse userLoginResponse = getUserLoginResponse(user);
-        return getLoginResponse(userLoginResponse);
+        Optional<User> userForLR = userRepository.findByEmail(loginRequest.getEmail());
+        if (userForLR.isPresent()) {
+            Authentication auth = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            User user = getUser(auth);
+            UserLoginResponse userLoginResponse = getUserLoginResponse(user);
+            return getLoginResponse(userLoginResponse);
+        }
+        return new LoginResponse().setResult(false);
     }
 
     public ResultResponse postRestore(RestoreRequest request) throws MailjetException {
@@ -54,6 +58,7 @@ public class LoginServiceImpl implements LoginService {
         if (user.isPresent()) {
             String code = generateSecretKey();
             user.get().setCode(code);
+            userRepository.save(user.get());
             String message = url.getBaseUrl() + "/login/change-password/" + code;
             sender.send(request.getEmail(), message);
             return new ResultResponse().setResult(true);
@@ -123,6 +128,6 @@ public class LoginServiceImpl implements LoginService {
     }
 
     private String generateSecretKey() {
-        return RandomStringUtils.randomAlphanumeric(14);
+        return RandomStringUtils.randomAlphanumeric(7);
     }
 }

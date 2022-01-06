@@ -2,13 +2,16 @@ package com.example.blogengine.repository;
 
 import com.example.blogengine.model.Post;
 import com.example.blogengine.model.enumerated.ModerationStatus;
+import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -91,4 +94,9 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Query("SELECT MIN(time) FROM Post ")
     Optional<Date> findLatestPost();
+
+    @Modifying
+    @Transactional
+    @Query(value = "update posts set view_count =:count where id = :id", nativeQuery = true)
+    void updateViewCount(@Param("id") int id,@Param("count") int count);
 }

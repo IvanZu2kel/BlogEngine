@@ -17,8 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
-import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -87,9 +87,9 @@ public class PostServiceImpl implements PostService {
         } else {
             User user = userRepository.findByEmail(principal.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("user not found"));
-            if (!post.getUser().equals(user) || user.getIsModerator() == 0) {
+            if (!post.getUser().getEmail().equals(user.getEmail())) {
                 post.setViewCount(post.getViewCount() + 1);
-                postRepository.save(post);
+                postRepository.updateViewCount(post.getId(), post.getViewCount());
             }
         }
         List<PostComment> commentsList = commentRepository.findPostCommentsById(id);
@@ -218,15 +218,56 @@ public class PostServiceImpl implements PostService {
     }
 
     private void setTagsForPost(Post post, List<String> tags) {
+        List<Tag2Post> tags2Post = tag2PostRepository.findTagsByPost(post.getId());
         List<String> tagList = new ArrayList<>(tags);
-        for (String t : tagList) {
-            Tag tag = new Tag()
-                    .setName(t);
-            tagRepository.save(tag);
-            Tag2Post tag2Post = new Tag2Post()
-                    .setPost_id(post.getId())
-                    .setTag_id(tag.getId());
-            tag2PostRepository.save(tag2Post);
+        Set<String> setTag = new HashSet<>(tagList);
+        if (!tags2Post.isEmpty() && tagList.isEmpty()) {
+            for (Tag2Post t2p : tags2Post) {
+                tag2PostRepository.deleteById(t2p.getId());
+            }
+        }
+        if (!tags2Post.isEmpty() && !tagList.isEmpty()) {
+            for (Tag2Post t2p : tags2Post) {
+                tag2PostRepository.deleteById(t2p.getId());
+            }
+            for (String t : setTag) {
+                Optional<Tag> byTag = tagRepository.findByTag(t);
+                if (byTag.isPresent()) {
+                    Tag2Post tag2Post = new Tag2Post()
+                            .setPost_id(post.getId())
+                            .setTag_id(byTag.get().getId());
+                    tag2PostRepository.save(tag2Post);
+                } else {
+                    Tag tag = new Tag()
+                            .setName(t);
+                    tagRepository.save(tag);
+                    Tag2Post tag2Post = new Tag2Post()
+                            .setPost_id(post.getId())
+                            .setTag_id(tag.getId());
+                    tag2PostRepository.save(tag2Post);
+                }
+            }
+        }
+        if (tags2Post.isEmpty() && !tagList.isEmpty()) {
+            for (String t : setTag) {
+                Optional<Tag> byTag = tagRepository.findByTag(t);
+                if (byTag.isPresent()) {
+                    Optional<Tag2Post> tagByPost = tag2PostRepository.findTagByPost(byTag.get().getId(), post.getId());
+                    if (tagByPost.isPresent()) continue;
+                    Tag2Post tag2Post = new Tag2Post()
+                            .setPost_id(post.getId())
+                            .setTag_id(byTag.get().getId());
+                    tag2PostRepository.save(tag2Post);
+                } else {
+                    Tag tag = new Tag()
+                            .setName(t);
+                    tagRepository.save(tag);
+                    Tag2Post tag2Post = new Tag2Post()
+                            .setPost_id(post.getId())
+                            .setTag_id(tag.getId());
+                    tag2PostRepository.save(tag2Post);
+                }
+            }
         }
     }
 

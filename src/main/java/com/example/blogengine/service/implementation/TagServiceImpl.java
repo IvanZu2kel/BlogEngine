@@ -6,7 +6,6 @@ import com.example.blogengine.model.Post;
 import com.example.blogengine.model.Tag;
 import com.example.blogengine.model.enumerated.ModerationStatus;
 import com.example.blogengine.repository.PostRepository;
-import com.example.blogengine.repository.TagRepository;
 import com.example.blogengine.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,14 +16,13 @@ import java.util.*;
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
     private final PostRepository postRepository;
-    private final TagRepository tagRepository;
 
     public TagsResponse getTags(String query) {
         Map<Tag, Double> tagMap = new HashMap<>();
         List<Tag4TagsResponse> tag4TagsResponseList = new ArrayList<>();
         TagsResponse tagsResponse = new TagsResponse();
         List<Post> postList = new ArrayList<>();
-        postRepository.findAll().forEach(p -> {
+        postRepository.findPosts().forEach(p -> {
             if (p.getIsActive() == 1 && p.getModerationStatus().equals(ModerationStatus.ACCEPTED) && p.getTime().compareTo(new Date()) < 1)
                 postList.add(p);
             p.getTags().forEach(tag -> tagMap.compute(tag, (k, v) -> (v == null) ? v = 1.0 : v + 1.0));
@@ -36,7 +34,7 @@ public class TagServiceImpl implements TagService {
                 if (tag.getName().contains(query)) {
                     Tag4TagsResponse tag4TagsResponse = new Tag4TagsResponse();
                     tag4TagsResponse.setName(tag.getName());
-                    tag4TagsResponse.setWeight(value / postList.size() * k);
+                    tag4TagsResponse.setWeight(Math.max(value / postList.size() * k, 0.3));
                     tag4TagsResponseList.add(tag4TagsResponse);
                 }
             });
