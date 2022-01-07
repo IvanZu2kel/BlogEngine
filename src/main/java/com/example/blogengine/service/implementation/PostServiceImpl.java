@@ -303,7 +303,7 @@ public class PostServiceImpl implements PostService {
         return new PostResponseList()
                 .setActive(post.getIsActive() == 1)
                 .setId(post.getId())
-                .setTimestamp(new Date().getTime() / 1000)
+                .setTimestamp(post.getTime().getTime() / 1000)
                 .setUser(new UserPostResponse().setName(post.getUser().getName()).setId(post.getUser().getId()))
                 .setTitle(post.getTitle())
                 .setAnnounce(setAnnounce(post))
