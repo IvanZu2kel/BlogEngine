@@ -25,7 +25,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 
     public AuthCaptchaResponse getCaptcha() throws IOException {
         final Cage cage = new GCage();
-        String token = cage.getTokenGenerator().next();
+        String token = generateSecretKey();
         String secretKey = generateSecretKey();
         String base64String = ConvertImageToBase64(token, cage);
 
@@ -64,6 +64,6 @@ public class CaptchaServiceImpl implements CaptchaService {
     }
 
     private String generateSecretKey() {
-        return RandomStringUtils.randomAlphanumeric(4);
+        return RandomStringUtils.randomAlphanumeric(5);
     }
 }
