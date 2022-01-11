@@ -77,9 +77,9 @@ public class StorageServiceImpl implements StorageService {
 
     private BufferedImage cropImage(InputStream inputStream) throws IOException {
         BufferedImage imBuff = ImageIO.read(inputStream);
-        ImageFilter filter = new CropImageFilter(0, 0, 36, 36);
+        ImageFilter filter = new CropImageFilter(0, 0, 225, 225);
         Image cropped = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(imBuff.getSource(), filter));
-        BufferedImage image = new BufferedImage(36, 36, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(225, 225, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
         g.drawImage(cropped, 0, 0, null);
         g.dispose();
