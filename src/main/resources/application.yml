@@ -22,7 +22,7 @@ blog:
   copyright: Зуккель Иван
   copyrightFrom: 2021
 server:
-  port: ${PORT:8081}
+  port: ${PORT:8080}
   base_url: https://zukkel-java-blog.herokuapp.com
 mailjet:
   mail:
