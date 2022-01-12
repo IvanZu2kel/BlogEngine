@@ -32,3 +32,6 @@ mailjet:
 jasypt:
   encryptor:
     bean: encryptorBean
+html:
+  file:
+    recovery: ./src/main/resources/messages/recovery.html
