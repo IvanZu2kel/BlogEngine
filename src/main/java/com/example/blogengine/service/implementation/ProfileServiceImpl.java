@@ -85,6 +85,7 @@ public class ProfileServiceImpl implements ProfileService {
                     user.setName(profileRequest.getName());
                 }
         if (errors.isEmpty()) {
+            user.setPhoto("");
             userRepository.save(user);
             return new ProfileResponse().setResult(true);
         } else {
