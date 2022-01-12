@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.Principal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -192,13 +191,24 @@ public class PostServiceImpl implements PostService {
         }
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
         Post post = postRepository.findPostById(id).orElseThrow(() -> new PostNotFoundException("Поста с данным id не существует"));
-        if (user.getId() == post.getUser().getId()) {
+        if (user.getId() == post.getUser().getId() || user.getIsModerator() == 1) {
             Date date = setDatePost(postRequest.getTimestamp());
             post
-                    .setTime(date)
                     .setIsActive(postRequest.getActive())
                     .setTitle(postRequest.getTitle())
                     .setText(postRequest.getText());
+            if (user.getId() == post.getUser().getId()) {
+                post.setTime(date);
+            }
+            if (user.getIsModerator() == 1) {
+                if (post.getModerationStatus().equals(ModerationStatus.NEW)) {
+                    post.setModerationStatus(ModerationStatus.NEW);
+                } else if (post.getModerationStatus().equals(ModerationStatus.DECLINED)) {
+                    post.setModerationStatus(ModerationStatus.DECLINED);
+                } else {
+                    post.setModerationStatus(ModerationStatus.ACCEPTED);
+                }
+            }
             Post sPost = postRepository.save(post);
             setTagsForPost(sPost, postRequest.getTags());
             postRepository.save(sPost);
