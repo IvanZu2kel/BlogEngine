@@ -110,25 +110,26 @@ public class PostServiceImpl implements PostService {
     public PostsResponse getPostsMy(int offset, int limit, String status, Principal principal) throws StatusNotFoundException {
         Pageable pageable;
         pageable = PageRequest.of(offset, limit);
+        Page<Post> posts;
         switch (status) {
             case "inactive": {
-                Page<Post> posts = postRepository.findPostsMyInactive(pageable, principal.getName());
-                return createPostResponse(posts, (int) posts.getTotalElements());
+                posts = postRepository.findPostsMyInactive(pageable, principal.getName());
+                break;
             }
             case "pending": {
-                Page<Post> posts = postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
-                return createPostResponse(posts, (int) posts.getTotalElements());
+                posts = postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
+                break;
             }
             case "declined": {
-                Page<Post> posts = postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
-                return createPostResponse(posts, (int) posts.getTotalElements());
+                posts = postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
+                break;
             }
-            case "published": {
-                Page<Post> posts = postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
-                return createPostResponse(posts, (int) posts.getTotalElements());
+            default: {
+                posts = postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
+                break;
             }
         }
-        throw new StatusNotFoundException("статус не найден");
+        return createPostResponse(posts, (int) posts.getTotalElements());
     }
 
     public PostsResponse getModeratePost(int offset, int limit, String status, Principal principal) throws StatusNotFoundException {
