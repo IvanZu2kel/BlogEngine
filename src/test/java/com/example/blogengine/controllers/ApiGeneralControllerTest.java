@@ -3,7 +3,10 @@ package com.example.blogengine.controllers;
 import com.example.blogengine.AbstractTest;
 import com.example.blogengine.api.request.ModeratorRequest;
 import com.example.blogengine.model.Post;
+import com.example.blogengine.model.User;
+import com.example.blogengine.model.enumerated.ModerationStatus;
 import com.example.blogengine.repository.PostRepository;
+import com.example.blogengine.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -45,32 +49,10 @@ public class ApiGeneralControllerTest extends AbstractTest {
     }
 
     @Test
-    @WithMockUser(username = "test3@test.ru", authorities = "user:moderate")
-    void postModerate() throws Exception {
-        List<Post> postsListNew = postRepository.findPostByModerationStatus();
-        Post post = postsListNew.get(0);
-
-        ModeratorRequest moderatorRequest = new ModeratorRequest()
-                .setPostId(post.getId())
-                .setDecision("accept");
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/moderation")
-                        .principal(() -> "test3@test.ru")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(moderatorRequest)))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.result").value(true));
-    }
-
-    @Test
     @WithMockUser(username = "test3@test.ru", authorities = "user:write")
     void postModerateNoModerator() throws Exception {
-        List<Post> postsListNew = postRepository.findPostByModerationStatus();
-        Post post = postsListNew.get(0);
-
         ModeratorRequest moderatorRequest = new ModeratorRequest()
-                .setPostId(post.getId())
+                .setPostId(2)
                 .setDecision("accept");
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/moderation")

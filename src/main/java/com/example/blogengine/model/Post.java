@@ -52,6 +52,7 @@ public class Post {
     @Column(name = "view_count", columnDefinition = "int")
     @NonNull
     private int viewCount;
+
     @ManyToMany
     @JoinTable(name = "tag2post",
             joinColumns = {@JoinColumn(name = "post_id")},

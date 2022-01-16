@@ -105,7 +105,7 @@ public class ApiAuthControllerTest extends AbstractTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.user.id")
                         .value(userRepository.findByEmail("test3@test.ru").get().getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.user.moderationCount")
-                        .value(postRepository.findPostByModerationStatus().size()));
+                        .value(postRepository.findPostByModerationStatusNew().size()));
     }
 
     @Test

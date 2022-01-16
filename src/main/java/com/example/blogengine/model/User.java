@@ -1,11 +1,14 @@
 package com.example.blogengine.model;
 
 import com.example.blogengine.model.enumerated.Role;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -50,5 +53,4 @@ public class User {
     public Role getRole() {
         return isModerator == 1 ? Role.MODERATOR : Role.USER;
     }
-
 }

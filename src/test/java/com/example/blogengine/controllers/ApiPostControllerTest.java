@@ -41,8 +41,6 @@ public class ApiPostControllerTest extends AbstractTest {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private TagRepository tagRepository;
 
     private Pageable pageable;
     private Page<Post> def;
