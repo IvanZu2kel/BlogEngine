@@ -32,7 +32,7 @@ public class PostServiceImpl implements PostService {
     private final GlobalSettingsRepository globalSettingsRepository;
 
     public PostsResponse getPosts(int offset, int limit, String mode) {
-        Pageable pageable = PageRequest.of(offset, limit);
+        Pageable pageable = PageRequest.of(offset/limit, limit);
         Page<Post> postPage;
         switch (mode) {
             case "popular": {
