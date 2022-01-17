@@ -7,6 +7,7 @@ import com.example.blogengine.model.Tag2Post;
 import com.example.blogengine.model.User;
 import com.example.blogengine.model.enumerated.ModerationStatus;
 import com.example.blogengine.repository.PostRepository;
+import com.example.blogengine.repository.TagRepository;
 import com.example.blogengine.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -166,13 +167,16 @@ public class ApiPostControllerTest extends AbstractTest {
 
     @Test
     void searchPostsByTag() throws Exception {
+        Pageable pageable = PageRequest.of(0,20);
+        Page<Post> pagePost = postRepository.findAllPostsByTag("политэс", pageable);
+        long totalElements = pagePost.getTotalElements();
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/post/byTag")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("tag", "политэс"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.count").value(5)).andReturn();
+                .andExpect(MockMvcResultMatchers.jsonPath("$.count").value(totalElements)).andReturn();
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/post/byTag")
@@ -288,7 +292,7 @@ public class ApiPostControllerTest extends AbstractTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("status", "publish"))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test

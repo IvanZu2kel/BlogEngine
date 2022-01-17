@@ -2,7 +2,6 @@ package com.example.blogengine.repository;
 
 import com.example.blogengine.model.Post;
 import com.example.blogengine.model.enumerated.ModerationStatus;
-import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query(value = "SELECT * from posts p where p.moderation_status = 'NEW'", nativeQuery = true)
-    List<Post> findPostByModerationStatus();
+    List<Post> findPostByModerationStatusNew();
 
     @Query(value = "select * from posts p where p.is_active = 1 and p.moderation_status = 'ACCEPTED' and p.`time` <= NOW() ORDER BY " +
             "(select count(*) from post_comments c where c.post_id = p.id) DESC", nativeQuery = true)

@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.Principal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -33,7 +32,7 @@ public class PostServiceImpl implements PostService {
     private final GlobalSettingsRepository globalSettingsRepository;
 
     public PostsResponse getPosts(int offset, int limit, String mode) {
-        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Pageable pageable = PageRequest.of(offset, limit);
         Page<Post> postPage;
         switch (mode) {
             case "popular": {
@@ -57,7 +56,7 @@ public class PostServiceImpl implements PostService {
     }
 
     public PostsResponse getPostsSearch(int offset, int limit, String query) {
-        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Pageable pageable = PageRequest.of(offset, limit);
         Page<Post> pageOfTags;
         if (query.trim().equals("")) {
             pageOfTags = postRepository.findAllPostsByTimeDesc(pageable);
@@ -68,13 +67,13 @@ public class PostServiceImpl implements PostService {
     }
 
     public PostsResponse getPostsByDate(int offset, int limit, String date) {
-        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Pageable pageable = PageRequest.of(offset, limit);
         Page<Post> postPage = postRepository.findAllPostsByDate(date, pageable);
         return createPostResponse(postPage, (int) postPage.getTotalElements());
     }
 
     public PostsResponse getPostsByTag(int offset, int limit, String tag) {
-        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Pageable pageable = PageRequest.of(offset, limit);
         Page<Post> postPage = postRepository.findAllPostsByTag(tag, pageable);
         return createPostResponse(postPage, (int) postPage.getTotalElements());
     }
@@ -110,30 +109,31 @@ public class PostServiceImpl implements PostService {
 
     public PostsResponse getPostsMy(int offset, int limit, String status, Principal principal) throws StatusNotFoundException {
         Pageable pageable;
-        pageable = PageRequest.of(offset / limit, limit);
+        pageable = PageRequest.of(offset, limit);
+        Page<Post> posts;
         switch (status) {
             case "inactive": {
-                Page<Post> posts = postRepository.findPostsMyInactive(pageable, principal.getName());
-                return createPostResponse(posts, (int) posts.getTotalElements());
+                posts = postRepository.findPostsMyInactive(pageable, principal.getName());
+                break;
             }
             case "pending": {
-                Page<Post> posts = postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
-                return createPostResponse(posts, (int) posts.getTotalElements());
+                posts = postRepository.findPostsMyIsActive("NEW", principal.getName(), pageable);
+                break;
             }
             case "declined": {
-                Page<Post> posts = postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
-                return createPostResponse(posts, (int) posts.getTotalElements());
+                posts = postRepository.findPostsMyIsActive("DECLINED", principal.getName(), pageable);
+                break;
             }
-            case "published": {
-                Page<Post> posts = postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
-                return createPostResponse(posts, (int) posts.getTotalElements());
+            default: {
+                posts = postRepository.findPostsMyIsActive("ACCEPTED", principal.getName(), pageable);
+                break;
             }
         }
-        throw new StatusNotFoundException("статус не найден");
+        return createPostResponse(posts, (int) posts.getTotalElements());
     }
 
     public PostsResponse getModeratePost(int offset, int limit, String status, Principal principal) throws StatusNotFoundException {
-        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Pageable pageable = PageRequest.of(offset, limit);
         User moder = userRepository.findByEmail(principal.getName()).orElseThrow();
         switch (status) {
             case "new": {
@@ -192,13 +192,24 @@ public class PostServiceImpl implements PostService {
         }
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
         Post post = postRepository.findPostById(id).orElseThrow(() -> new PostNotFoundException("Поста с данным id не существует"));
-        if (user.getId() == post.getUser().getId()) {
+        if (user.getId() == post.getUser().getId() || user.getIsModerator() == 1) {
             Date date = setDatePost(postRequest.getTimestamp());
             post
-                    .setTime(date)
                     .setIsActive(postRequest.getActive())
                     .setTitle(postRequest.getTitle())
                     .setText(postRequest.getText());
+            if (user.getId() == post.getUser().getId()) {
+                post.setTime(date);
+            }
+            if (user.getIsModerator() == 1) {
+                if (post.getModerationStatus().equals(ModerationStatus.NEW)) {
+                    post.setModerationStatus(ModerationStatus.NEW);
+                } else if (post.getModerationStatus().equals(ModerationStatus.DECLINED)) {
+                    post.setModerationStatus(ModerationStatus.DECLINED);
+                } else {
+                    post.setModerationStatus(ModerationStatus.ACCEPTED);
+                }
+            }
             Post sPost = postRepository.save(post);
             setTagsForPost(sPost, postRequest.getTags());
             postRepository.save(sPost);

@@ -105,7 +105,7 @@ public class ApiAuthControllerTest extends AbstractTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.user.id")
                         .value(userRepository.findByEmail("test3@test.ru").get().getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.user.moderationCount")
-                        .value(postRepository.findPostByModerationStatus().size()));
+                        .value(postRepository.findPostByModerationStatusNew().size()));
     }
 
     @Test
@@ -209,7 +209,8 @@ public class ApiAuthControllerTest extends AbstractTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(loginRequest)))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result").value(false)).andReturn();
     }
 
     @Test

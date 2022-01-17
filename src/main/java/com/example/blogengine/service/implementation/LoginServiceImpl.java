@@ -111,7 +111,7 @@ public class LoginServiceImpl implements LoginService {
                 .setEmail(user.getEmail());
         if (user.getIsModerator() == (byte) 1) {
             userLoginResponse.setModeration(true)
-                    .setModerationCount(postRepository.findPostByModerationStatus().size())
+                    .setModerationCount(postRepository.findPostByModerationStatusNew().size())
                     .setSettings(true);
         } else {
             userLoginResponse.setModeration(false)

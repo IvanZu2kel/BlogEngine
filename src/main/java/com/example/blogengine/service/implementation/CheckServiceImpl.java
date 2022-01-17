@@ -35,7 +35,7 @@ public class CheckServiceImpl implements CheckService {
                 .setEmail(currentUser.getEmail());
         if (currentUser.getIsModerator() == 1) {
             userLoginResponse.setModeration(true)
-                    .setModerationCount(postRepository.findPostByModerationStatus().size())
+                    .setModerationCount(postRepository.findPostByModerationStatusNew().size())
                     .setSettings(true);
         } else {
             userLoginResponse.setSettings(false)

@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.blogengine.exception.IncorrectFormatException;
 import com.example.blogengine.service.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.imgscalr.Scalr;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,13 +78,7 @@ public class StorageServiceImpl implements StorageService {
 
     private BufferedImage cropImage(InputStream inputStream) throws IOException {
         BufferedImage imBuff = ImageIO.read(inputStream);
-        ImageFilter filter = new CropImageFilter(0, 0, 225, 225);
-        Image cropped = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(imBuff.getSource(), filter));
-        BufferedImage image = new BufferedImage(225, 225, BufferedImage.TYPE_INT_RGB);
-        Graphics g = image.getGraphics();
-        g.drawImage(cropped, 0, 0, null);
-        g.dispose();
-        return image;
+        return Scalr.resize(imBuff, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.AUTOMATIC,
+                360, 360, Scalr.OP_ANTIALIAS);
     }
-
 }
