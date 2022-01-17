@@ -50,7 +50,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Page<Post> findAllPostsByDate(@Param("date") String date, Pageable pageable);
 
     @Query(value = "SELECT * FROM posts p JOIN tag2post tp ON tp.post_id = p.id JOIN tags t ON t.id = tp.tag_id WHERE t.name = :tag AND p.is_active = 1 " +
-            "AND p.moderation_status = 'ACCEPTED' AND p.`time` <= NOW() ORDER BY p.time", nativeQuery = true)
+            "AND p.moderation_status = 'ACCEPTED' AND p.`time` <= NOW() ORDER BY p.time desc", nativeQuery = true)
     Page<Post> findAllPostsByTag(@Param("tag") String tag, Pageable pageable);
 
     @Query(value = "SELECT * FROM posts p WHERE p.id = :id", nativeQuery = true)
