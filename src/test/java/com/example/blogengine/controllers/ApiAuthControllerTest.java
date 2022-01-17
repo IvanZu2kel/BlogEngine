@@ -5,8 +5,10 @@ import com.example.blogengine.api.request.LoginRequest;
 import com.example.blogengine.api.request.PasswordRequest;
 import com.example.blogengine.api.request.UserRequest;
 import com.example.blogengine.model.CaptchaCodes;
+import com.example.blogengine.model.GlobalSettings;
 import com.example.blogengine.model.User;
 import com.example.blogengine.repository.CaptchaRepository;
+import com.example.blogengine.repository.GlobalSettingsRepository;
 import com.example.blogengine.repository.PostRepository;
 import com.example.blogengine.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Date;
+import java.util.Optional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,6 +40,9 @@ public class ApiAuthControllerTest extends AbstractTest {
     private PostRepository postRepository;
     @Autowired
     private CaptchaRepository captchaRepository;
+    @Autowired
+    private GlobalSettingsRepository globalSettingsRepository;
+
 
     private CaptchaCodes captchaCodes;
 
@@ -121,6 +127,10 @@ public class ApiAuthControllerTest extends AbstractTest {
 
     @Test
     void postRegister() throws Exception {
+        Optional<GlobalSettings> multiuser_mode = globalSettingsRepository.findByCode("MULTIUSER_MODE");
+        multiuser_mode.get().setValue("YES");
+        globalSettingsRepository.save(multiuser_mode.get());
+
         UserRequest userRequest = new UserRequest()
                 .setEMail("testov1@test.ru")
                 .setName("Testov")
