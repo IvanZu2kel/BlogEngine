@@ -31,6 +31,7 @@ public class PostServiceImpl implements PostService {
     private final TagRepository tagRepository;
     private final GlobalSettingsRepository globalSettingsRepository;
 
+    @Override
     public PostsResponse getPosts(int offset, int limit, String mode) {
         Pageable pageable = PageRequest.of(offset/limit, limit);
         Page<Post> postPage;
@@ -55,29 +56,33 @@ public class PostServiceImpl implements PostService {
         return createPostResponse(postPage, postRepository.findAllPosts().size());
     }
 
+    @Override
     public PostsResponse getPostsSearch(int offset, int limit, String query) {
         Pageable pageable = PageRequest.of(offset/limit, limit);
         Page<Post> pageOfTags;
         if (query.trim().equals("")) {
             pageOfTags = postRepository.findAllPostsByTimeDesc(pageable);
         } else {
-            pageOfTags = postRepository.findAllPostsBySearch(query, pageable);
+            pageOfTags = postRepository.findAllPostsBySearch(query.toLowerCase(Locale.ROOT), pageable);
         }
         return createPostResponse(pageOfTags, (int) pageOfTags.getTotalElements());
     }
 
+    @Override
     public PostsResponse getPostsByDate(int offset, int limit, String date) {
         Pageable pageable = PageRequest.of(offset/limit, limit);
         Page<Post> postPage = postRepository.findAllPostsByDate(date, pageable);
         return createPostResponse(postPage, (int) postPage.getTotalElements());
     }
 
+    @Override
     public PostsResponse getPostsByTag(int offset, int limit, String tag) {
         Pageable pageable = PageRequest.of(offset/limit, limit);
         Page<Post> postPage = postRepository.findAllPostsByTag(tag, pageable);
         return createPostResponse(postPage, (int) postPage.getTotalElements());
     }
 
+    @Override
     public PostResponse getPostsById(int id, Principal principal) throws UsernameNotFoundException, PostNotFoundException {
         Post post = postRepository.findPostById(id)
                 .orElseThrow(() -> new PostNotFoundException("Поста с данным id не существует"));
@@ -107,6 +112,7 @@ public class PostServiceImpl implements PostService {
         return getPostResponse(postCommentResponseList, post, tagList);
     }
 
+    @Override
     public PostsResponse getPostsMy(int offset, int limit, String status, Principal principal) throws StatusNotFoundException {
         Pageable pageable;
         pageable = PageRequest.of(offset/limit, limit);
@@ -132,6 +138,7 @@ public class PostServiceImpl implements PostService {
         return createPostResponse(posts, (int) posts.getTotalElements());
     }
 
+    @Override
     public PostsResponse getModeratePost(int offset, int limit, String status, Principal principal) throws StatusNotFoundException {
         Pageable pageable = PageRequest.of(offset/limit, limit);
         User moder = userRepository.findByEmail(principal.getName()).orElseThrow();
@@ -152,6 +159,7 @@ public class PostServiceImpl implements PostService {
         throw new StatusNotFoundException("статус не найден");
     }
 
+    @Override
     public ResultResponse createPost(PostRequest postRequest, Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
         if (postRequest.getTitle().length() < 3 || postRequest.getText().length() < 50) {
@@ -182,6 +190,7 @@ public class PostServiceImpl implements PostService {
         return new ResultResponse().setResult(true);
     }
 
+    @Override
     public ResultResponse putPostsById(int id, PostRequest postRequest, Principal principal) throws PostNotFoundException, AuthorAndUserNoEqualsException {
         if (postRequest.getTitle().length() < 3 || postRequest.getText().length() < 50) {
             return new ResultResponse()
@@ -217,6 +226,7 @@ public class PostServiceImpl implements PostService {
         return new ResultResponse().setResult(true);
     }
 
+    @Override
     public ResultResponse postModeratePost(ModeratorRequest moderatorRequest, Principal principal) throws PostNotFoundException, ModeratorNotFoundException {
         User moderator = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new ModeratorNotFoundException(""));
         Post post = postRepository.findPostById(moderatorRequest.getPostId())

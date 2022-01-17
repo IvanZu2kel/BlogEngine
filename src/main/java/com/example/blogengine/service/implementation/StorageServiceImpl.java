@@ -38,6 +38,7 @@ public class StorageServiceImpl implements StorageService {
                 "api_secret", "eJLaV6tCOwJ77r-V0Re03gXoIbk"));
     }
 
+    @Override
     public String store(MultipartFile image) throws IOException, IncorrectFormatException {
         StringBuilder sb = new StringBuilder(LENGTH);
         for (int i = 0; i < LENGTH; i++) {

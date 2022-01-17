@@ -44,6 +44,13 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "order by p.`time` desc", nativeQuery = true)
     Page<Post> findAllPostsBySearch(String query, Pageable pageable);
 
+    @Query("select p from Post p " +
+            "where ( LOWER(p.text) like %:query% or LOWER(p.title) like %:query% ) " +
+            "and p.isActive = 1 and p.moderationStatus = 'ACCEPTED' " +
+            "and p.time <= current_timestamp " +
+            "order by p.time desc")
+    Page<Post> findAllPostsBySearch1(String query, Pageable pageable);
+
     @Query(value = "SELECT * FROM posts p WHERE p.`time` LIKE :date% AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` <= NOW() " +
             "ORDER BY p.time", nativeQuery = true)
     Page<Post> findAllPostsByDate(@Param("date") String date, Pageable pageable);

@@ -25,6 +25,7 @@ public class PostVotesServiceImpl implements PostVotesService {
     private final UserRepository userRepository;
     private final PostVotesRepository postVotesRepository;
 
+    @Override
     public ResultResponse postLike(PostVoteRequest postVoteRequest, Principal principal) {
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow();
@@ -50,6 +51,7 @@ public class PostVotesServiceImpl implements PostVotesService {
         return new ResultResponse().setResult(true);
     }
 
+    @Override
     public ResultResponse postDislike(PostVoteRequest postVoteRequest, Principal principal) {
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow();

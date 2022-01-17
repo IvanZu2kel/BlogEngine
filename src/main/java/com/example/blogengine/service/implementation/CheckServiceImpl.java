@@ -19,6 +19,7 @@ public class CheckServiceImpl implements CheckService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
+    @Override
     public LoginResponse getCheck(Principal principal) throws UsernameNotFoundException {
         if (principal == null) {
             return new LoginResponse()

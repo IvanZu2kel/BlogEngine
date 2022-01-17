@@ -24,6 +24,7 @@ public class StatisticServiceImpl implements StatisticService {
     private final PostVotesRepository postVotesRepository;
     private final GlobalSettingsRepository settingsRepository;
 
+    @Override
     public StatisticResponse getMyStatistic(Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
         int SECOND = 1000;
@@ -35,6 +36,7 @@ public class StatisticServiceImpl implements StatisticService {
                 .setFirstPublication(postRepository.findLatestPostByUser(user.getId()).orElse(new Date(0)).getTime()/ SECOND);
     }
 
+    @Override
     public StatisticResponse getAllStatistic(Principal principal) throws UserPrincipalNotFoundException, ModeratorNotFoundException {
         if (principal == null) throw new UserPrincipalNotFoundException("пользователь не найден");
         if (settingsRepository.findByCode("STATISTICS_IS_PUBLIC").orElse(new GlobalSettings()).getValue().equals("NO")) {
