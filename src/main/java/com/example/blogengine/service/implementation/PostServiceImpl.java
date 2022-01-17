@@ -56,7 +56,7 @@ public class PostServiceImpl implements PostService {
     }
 
     public PostsResponse getPostsSearch(int offset, int limit, String query) {
-        Pageable pageable = PageRequest.of(offset, limit);
+        Pageable pageable = PageRequest.of(offset/limit, limit);
         Page<Post> pageOfTags;
         if (query.trim().equals("")) {
             pageOfTags = postRepository.findAllPostsByTimeDesc(pageable);
@@ -67,13 +67,13 @@ public class PostServiceImpl implements PostService {
     }
 
     public PostsResponse getPostsByDate(int offset, int limit, String date) {
-        Pageable pageable = PageRequest.of(offset, limit);
+        Pageable pageable = PageRequest.of(offset/limit, limit);
         Page<Post> postPage = postRepository.findAllPostsByDate(date, pageable);
         return createPostResponse(postPage, (int) postPage.getTotalElements());
     }
 
     public PostsResponse getPostsByTag(int offset, int limit, String tag) {
-        Pageable pageable = PageRequest.of(offset, limit);
+        Pageable pageable = PageRequest.of(offset/limit, limit);
         Page<Post> postPage = postRepository.findAllPostsByTag(tag, pageable);
         return createPostResponse(postPage, (int) postPage.getTotalElements());
     }
@@ -109,7 +109,7 @@ public class PostServiceImpl implements PostService {
 
     public PostsResponse getPostsMy(int offset, int limit, String status, Principal principal) throws StatusNotFoundException {
         Pageable pageable;
-        pageable = PageRequest.of(offset, limit);
+        pageable = PageRequest.of(offset/limit, limit);
         Page<Post> posts;
         switch (status) {
             case "inactive": {
@@ -133,7 +133,7 @@ public class PostServiceImpl implements PostService {
     }
 
     public PostsResponse getModeratePost(int offset, int limit, String status, Principal principal) throws StatusNotFoundException {
-        Pageable pageable = PageRequest.of(offset, limit);
+        Pageable pageable = PageRequest.of(offset/limit, limit);
         User moder = userRepository.findByEmail(principal.getName()).orElseThrow();
         switch (status) {
             case "new": {
