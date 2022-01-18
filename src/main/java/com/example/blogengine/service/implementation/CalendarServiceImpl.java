@@ -19,6 +19,7 @@ public class CalendarServiceImpl implements CalendarService {
     private final SimpleDateFormat dayMonthYearFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
+    @Override
     public CalendarResponse getCalendar(String year) {
         Set<Integer> yearSet = new HashSet<>();
         Map<String, Integer> dateMap = new HashMap<>();

@@ -21,6 +21,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final UserRepository userRepository;
     private final StorageServiceImpl storageService;
 
+    @Override
     public ProfileResponse postProfile(ProfileImageRequest profileRequest, Principal principal) throws IncorrectFormatException, IOException {
         Map<String, String> errors = new HashMap<>();
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
@@ -61,6 +62,7 @@ public class ProfileServiceImpl implements ProfileService {
         }
     }
 
+    @Override
     public ProfileResponse postProfile(ProfileRequest profileRequest, Principal principal) {
         Map<String, String> errors = new HashMap<>();
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();

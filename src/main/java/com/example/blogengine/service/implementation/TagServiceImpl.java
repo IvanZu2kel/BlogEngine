@@ -17,6 +17,7 @@ import java.util.*;
 public class TagServiceImpl implements TagService {
     private final PostRepository postRepository;
 
+    @Override
     public TagsResponse getTags(String query) {
         Map<Tag, Double> tagMap = new HashMap<>();
         List<Tag4TagsResponse> tag4TagsResponseList = new ArrayList<>();

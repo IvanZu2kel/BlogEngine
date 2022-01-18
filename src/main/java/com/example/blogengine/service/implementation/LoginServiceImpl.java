@@ -40,6 +40,7 @@ public class LoginServiceImpl implements LoginService {
     private final MailjetSender sender;
     private final Url url;
 
+    @Override
     public LoginResponse postLogin(LoginRequest loginRequest) {
         Optional<User> userForLR = userRepository.findByEmail(loginRequest.getEmail());
         if (userForLR.isPresent()) {
@@ -53,6 +54,7 @@ public class LoginServiceImpl implements LoginService {
         return new LoginResponse().setResult(false);
     }
 
+    @Override
     public ResultResponse postRestore(RestoreRequest request) throws MailjetException {
         Optional<User> user = userRepository.findByEmail(request.getEmail());
         if (user.isPresent()) {
@@ -65,6 +67,7 @@ public class LoginServiceImpl implements LoginService {
         } else return new ResultResponse().setResult(false);
     }
 
+    @Override
     public ResultPassResponse postPassword(PasswordRequest passwordRequest) {
         Optional<User> user = userRepository.findByCode(passwordRequest.getCode());
         CaptchaCodes captchaCodes = captchaRepository.findBySecretCode(passwordRequest.getCaptchaSecret());

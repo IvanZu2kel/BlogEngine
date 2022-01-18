@@ -23,6 +23,7 @@ import java.util.Date;
 public class CaptchaServiceImpl implements CaptchaService {
     private final CaptchaRepository captchaRepository;
 
+    @Override
     public AuthCaptchaResponse getCaptcha() throws IOException {
         final Cage cage = new GCage();
         String token = generateSecretKey();

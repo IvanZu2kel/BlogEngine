@@ -26,6 +26,7 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    @Override
     public ResponseEntity<CommentResponse> editComment(CommentRequest commentRequest, Principal principal) throws PostNotFoundException, CommentNotFoundException {
         CommentResponse commentResponse = new CommentResponse();
         if (commentRequest.getText().length() <= 3) {

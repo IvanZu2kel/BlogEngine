@@ -25,6 +25,7 @@ public class RegisterServiceImpl implements RegisterService {
     private final GlobalSettingsRepository globalSettingsRepository;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
+    @Override
     public RegisterResponse postRegister(UserRequest userRequest) throws MultiuserModeException {
         if (!globalSettingsRepository.findAllGlobalSettings("MULTIUSER_MODE").getValue().equals("YES")) {
             throw new MultiuserModeException();

@@ -16,6 +16,7 @@ import java.util.Optional;
 public class SettingsServiceImpl implements SettingsService {
     private final GlobalSettingsRepository globalSettingsRepository;
 
+    @Override
     public SettingsResponse getGlobalSettings() {
         SettingsResponse settingsResponse = new SettingsResponse();
         settingsResponse.setMultiuserMode(globalSettingsRepository.findAllGlobalSettings("MULTIUSER_MODE").getValue().equals("YES"));
@@ -24,6 +25,7 @@ public class SettingsServiceImpl implements SettingsService {
         return settingsResponse;
     }
 
+    @Override
     public void putGlobalSettings(SettingsRequest settingsRequest) {
         String MULTIUSER_MODE = settingsRequest.isMultiuserMode() ? "YES" : "NO";
         String POST_PREMODERATION = settingsRequest.isPostPremoderation() ? "YES" : "NO";
