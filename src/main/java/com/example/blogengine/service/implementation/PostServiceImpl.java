@@ -328,7 +328,7 @@ public class PostServiceImpl implements PostService {
         List<PostVotes> likeAndDislike = postVotesRepository.getAllByPostId(post.getId());
         return new PostResponse()
                 .setId(post.getId())
-                .setTimestamp(new Date().getTime() / 1000)
+                .setTimestamp(post.getTime().getTime() / 1000)
                 .setActive(post.getIsActive() == 1)
                 .setUser(new UserPostResponse().setName(post.getUser().getName()).setId(post.getUser().getId()))
                 .setTitle(post.getTitle())
