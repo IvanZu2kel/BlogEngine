@@ -1,5 +1,5 @@
-# Diplom_SkillBox_BackendBlog
-Это дипломная работа разработки backend составляющей блогового движка.
+# Блоговый движок
+Это проект разработки backend составляющей блогового движка.
 
 Он был создан с использованием **Spring Boot**, **Spring Security**, **Thymeleaf**, **Spring Data JPA** , **Spring Data REST**. База данных **MySQL**. 
 
